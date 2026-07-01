@@ -1,0 +1,14 @@
+{
+    "files.associations": {
+        "finger_control.h": "c",
+        "my_canbus.h": "c",
+        "my_trajectory_gen.h": "c",
+        "my_dynamixel.h": "c",
+        "stdint.h": "c",
+        "string.h": "c",
+        "stdbool.h": "c",
+        "cmath": "c",
+        "my_finger.h": "c"
+    },
+    "editor.defaultFormatter": null
+}

@@ -1,0 +1,16 @@
+LED
+    PD11~PD14
+
+UART6
+    TX : PC6
+    RX : PC7
+
+RS4785 Enable
+    PD15
+
+CAN1
+    CAN1_TX : PD1
+    CAN1_RX : PD0
+
+EXT button
+    PA0_wake up
