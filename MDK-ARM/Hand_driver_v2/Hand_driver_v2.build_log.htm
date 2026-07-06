@@ -27,197 +27,197 @@ Project File Date:  07/01/2026
 <h2>Output:</h2>
 *** Using Compiler 'V6.21', folder: 'C:\Program Files\Keil_v5\ARM\ARMCLANG\Bin'
 Build target 'Hand_driver_v2'
-../Core/Src/main.c(367): warning: passing 'volatile FingerController *' (aka 'volatile struct FingerController *') to parameter of type 'void *' discards qualifiers [-Wincompatible-pointer-types-discards-qualifiers]
-  367 |     memset(&finger_ptr_list[i]->controller, 0, sizeof(FingerController));
+../Core/Src/main.c(369): warning: passing 'volatile FingerController *' (aka 'volatile struct FingerController *') to parameter of type 'void *' discards qualifiers [-Wincompatible-pointer-types-discards-qualifiers]
+  369 |     memset(&finger_ptr_list[i]->controller, 0, sizeof(FingerController));
       |            ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 C:\Program Files\Keil_v5\ARM\ARMCLANG\Bin\..\include\string.h(321): note: passing argument to parameter here
   321 | extern _ARMABI void *memset(void * /*s*/, int /*c*/, size_t /*n*/) __attribute__((__nonnull__(1)));
       |                                         ^
-../Core/Src/main.c(400): warning: passing 'volatile TrajectoryQueue *' (aka 'volatile struct TrajectoryQueue *') to parameter of type 'TrajectoryQueue *' (aka 'struct TrajectoryQueue *') discards qualifiers [-Wincompatible-pointer-types-discards-qualifiers]
-  400 |       TrajectoryQueue_Init(&finger_ptr_list[i]->controller.traj_intp[j].queue);
+../Core/Src/main.c(402): warning: passing 'volatile TrajectoryQueue *' (aka 'volatile struct TrajectoryQueue *') to parameter of type 'TrajectoryQueue *' (aka 'struct TrajectoryQueue *') discards qualifiers [-Wincompatible-pointer-types-discards-qualifiers]
+  402 |       TrajectoryQueue_Init(&finger_ptr_list[i]->controller.traj_intp[j].queue);
       |                            ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 ../My_TrajGen\my_trajectory_gen.h(54): note: passing argument to parameter 'traj_queue' here
    54 | void TrajectoryQueue_Init(TrajectoryQueue *traj_queue);
       |                                            ^
-../Core/Src/main.c(569): warning: passing 'volatile StateResp *' (aka 'volatile struct StateResp *') to parameter of type 'void *' discards qualifiers [-Wincompatible-pointer-types-discards-qualifiers]
-  569 |     memset(&finger_ptr_list[i]->finger_SR, 0, sizeof(StateResp));
+../Core/Src/main.c(571): warning: passing 'volatile StateResp *' (aka 'volatile struct StateResp *') to parameter of type 'void *' discards qualifiers [-Wincompatible-pointer-types-discards-qualifiers]
+  571 |     memset(&finger_ptr_list[i]->finger_SR, 0, sizeof(StateResp));
       |            ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 C:\Program Files\Keil_v5\ARM\ARMCLANG\Bin\..\include\string.h(321): note: passing argument to parameter here
   321 | extern _ARMABI void *memset(void * /*s*/, int /*c*/, size_t /*n*/) __attribute__((__nonnull__(1)));
       |                                         ^
-../Core/Src/main.c(570): warning: passing 'volatile StateResp *' (aka 'volatile struct StateResp *') to parameter of type 'void *' discards qualifiers [-Wincompatible-pointer-types-discards-qualifiers]
-  570 |     memset(&finger_ptr_list[i]->joint_SR, 0, sizeof(StateResp));
+../Core/Src/main.c(572): warning: passing 'volatile StateResp *' (aka 'volatile struct StateResp *') to parameter of type 'void *' discards qualifiers [-Wincompatible-pointer-types-discards-qualifiers]
+  572 |     memset(&finger_ptr_list[i]->joint_SR, 0, sizeof(StateResp));
       |            ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 C:\Program Files\Keil_v5\ARM\ARMCLANG\Bin\..\include\string.h(321): note: passing argument to parameter here
   321 | extern _ARMABI void *memset(void * /*s*/, int /*c*/, size_t /*n*/) __attribute__((__nonnull__(1)));
       |                                         ^
-../Core/Src/main.c(571): warning: passing 'volatile StateResp *' (aka 'volatile struct StateResp *') to parameter of type 'void *' discards qualifiers [-Wincompatible-pointer-types-discards-qualifiers]
-  571 |     memset(&finger_ptr_list[i]->tf_PSens_SR, 0, sizeof(StateResp));
+../Core/Src/main.c(573): warning: passing 'volatile StateResp *' (aka 'volatile struct StateResp *') to parameter of type 'void *' discards qualifiers [-Wincompatible-pointer-types-discards-qualifiers]
+  573 |     memset(&finger_ptr_list[i]->tf_PSens_SR, 0, sizeof(StateResp));
       |            ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 C:\Program Files\Keil_v5\ARM\ARMCLANG\Bin\..\include\string.h(321): note: passing argument to parameter here
   321 | extern _ARMABI void *memset(void * /*s*/, int /*c*/, size_t /*n*/) __attribute__((__nonnull__(1)));
       |                                         ^
-../Core/Src/main.c(579): warning: passing 'volatile CAN_Queue *' (aka 'volatile struct CAN_Queue *') to parameter of type 'CAN_Queue *' (aka 'struct CAN_Queue *') discards qualifiers [-Wincompatible-pointer-types-discards-qualifiers]
-  579 |   CAN_Queue_Init(&can_rx_queue);
+../Core/Src/main.c(581): warning: passing 'volatile CAN_Queue *' (aka 'volatile struct CAN_Queue *') to parameter of type 'CAN_Queue *' (aka 'struct CAN_Queue *') discards qualifiers [-Wincompatible-pointer-types-discards-qualifiers]
+  581 |   CAN_Queue_Init(&can_rx_queue);
       |                  ^~~~~~~~~~~~~
 ../My_CANBus\my_canbus.h(25): note: passing argument to parameter 'can_queue' here
    25 | void CAN_Queue_Init(CAN_Queue *can_queue);
       |                                ^
-../Core/Src/main.c(580): warning: passing 'volatile CAN_Queue *' (aka 'volatile struct CAN_Queue *') to parameter of type 'CAN_Queue *' (aka 'struct CAN_Queue *') discards qualifiers [-Wincompatible-pointer-types-discards-qualifiers]
-  580 |   CAN_Queue_Init(&can_tx_queue);
+../Core/Src/main.c(582): warning: passing 'volatile CAN_Queue *' (aka 'volatile struct CAN_Queue *') to parameter of type 'CAN_Queue *' (aka 'struct CAN_Queue *') discards qualifiers [-Wincompatible-pointer-types-discards-qualifiers]
+  582 |   CAN_Queue_Init(&can_tx_queue);
       |                  ^~~~~~~~~~~~~
 ../My_CANBus\my_canbus.h(25): note: passing argument to parameter 'can_queue' here
    25 | void CAN_Queue_Init(CAN_Queue *can_queue);
       |                                ^
-../Core/Src/main.c(730): warning: passing 'volatile CAN_Queue *' (aka 'volatile struct CAN_Queue *') to parameter of type 'CAN_Queue *' (aka 'struct CAN_Queue *') discards qualifiers [-Wincompatible-pointer-types-discards-qualifiers]
-  730 |     while (CAN_Queue_Pop(&can_rx_queue, &rx_frame))
+../Core/Src/main.c(732): warning: passing 'volatile CAN_Queue *' (aka 'volatile struct CAN_Queue *') to parameter of type 'CAN_Queue *' (aka 'struct CAN_Queue *') discards qualifiers [-Wincompatible-pointer-types-discards-qualifiers]
+  732 |     while (CAN_Queue_Pop(&can_rx_queue, &rx_frame))
       |                          ^~~~~~~~~~~~~
 ../My_CANBus\my_canbus.h(27): note: passing argument to parameter 'can_queue' here
    27 | bool CAN_Queue_Pop(CAN_Queue *can_queue, CAN_Frame *can_frame);
       |                               ^
-../Core/Src/main.c(875): warning: passing 'volatile CAN_Queue *' (aka 'volatile struct CAN_Queue *') to parameter of type 'CAN_Queue *' (aka 'struct CAN_Queue *') discards qualifiers [-Wincompatible-pointer-types-discards-qualifiers]
-  875 |     while (HAL_CAN_GetTxMailboxesFreeLevel(&hcan1) > 0 && !CAN_Queue_IsEmpty(&can_tx_queue))
+../Core/Src/main.c(883): warning: passing 'volatile CAN_Queue *' (aka 'volatile struct CAN_Queue *') to parameter of type 'CAN_Queue *' (aka 'struct CAN_Queue *') discards qualifiers [-Wincompatible-pointer-types-discards-qualifiers]
+  883 |     while (HAL_CAN_GetTxMailboxesFreeLevel(&hcan1) > 0 && !CAN_Queue_IsEmpty(&can_tx_queue))
       |                                                                              ^~~~~~~~~~~~~
 ../My_CANBus\my_canbus.h(28): note: passing argument to parameter 'can_queue' here
    28 | bool CAN_Queue_IsEmpty(CAN_Queue *can_queue);
       |                                   ^
-../Core/Src/main.c(880): warning: passing 'volatile CAN_Queue *' (aka 'volatile struct CAN_Queue *') to parameter of type 'CAN_Queue *' (aka 'struct CAN_Queue *') discards qualifiers [-Wincompatible-pointer-types-discards-qualifiers]
-  880 |       if (CAN_Queue_Pop(&can_tx_queue, &tx_frame))
+../Core/Src/main.c(888): warning: passing 'volatile CAN_Queue *' (aka 'volatile struct CAN_Queue *') to parameter of type 'CAN_Queue *' (aka 'struct CAN_Queue *') discards qualifiers [-Wincompatible-pointer-types-discards-qualifiers]
+  888 |       if (CAN_Queue_Pop(&can_tx_queue, &tx_frame))
       |                         ^~~~~~~~~~~~~
 ../My_CANBus\my_canbus.h(27): note: passing argument to parameter 'can_queue' here
    27 | bool CAN_Queue_Pop(CAN_Queue *can_queue, CAN_Frame *can_frame);
       |                               ^
-../Core/Src/main.c(904): warning: passing 'volatile ServoXM4340 *' (aka 'volatile struct ServoXM4340 *') to parameter of type 'ServoXM4340 *' (aka 'struct ServoXM4340 *') discards qualifiers [-Wincompatible-pointer-types-discards-qualifiers]
-  904 |           hand_error_code |= servoException(&myServoList[i], 10);
+../Core/Src/main.c(912): warning: passing 'volatile ServoXM4340 *' (aka 'volatile struct ServoXM4340 *') to parameter of type 'ServoXM4340 *' (aka 'struct ServoXM4340 *') discards qualifiers [-Wincompatible-pointer-types-discards-qualifiers]
+  912 |           hand_error_code |= servoException(&myServoList[i], 10);
       |                                             ^~~~~~~~~~~~~~~
-../Core/Src/main.c(283): note: passing argument to parameter 'servo' here
-  283 | uint16_t servoException(ServoXM4340 *servo, int max_rx_err_ctr);
+../Core/Src/main.c(285): note: passing argument to parameter 'servo' here
+  285 | uint16_t servoException(ServoXM4340 *servo, int max_rx_err_ctr);
       |                                      ^
-../Core/Src/main.c(915): warning: passing 'volatile Finger *' (aka 'volatile struct Finger *') to parameter of type 'Finger *' (aka 'struct Finger *') discards qualifiers [-Wincompatible-pointer-types-discards-qualifiers]
-  915 |         updateFingerGravity(&finger_ptr_list[i]->finger, g_palm);
+../Core/Src/main.c(923): warning: passing 'volatile Finger *' (aka 'volatile struct Finger *') to parameter of type 'Finger *' (aka 'struct Finger *') discards qualifiers [-Wincompatible-pointer-types-discards-qualifiers]
+  923 |         updateFingerGravity(&finger_ptr_list[i]->finger, g_palm);
       |                             ^~~~~~~~~~~~~~~~~~~~~~~~~~~
 ../My_Finger\my_finger.h(171): note: passing argument to parameter 'finger' here
   171 | void updateFingerGravity(Finger *finger, const float g_palm[3]);
       |                                  ^
-../Core/Src/main.c(921): warning: passing 'volatile Finger *' (aka 'volatile struct Finger *') to parameter of type 'Finger *' (aka 'struct Finger *') discards qualifiers [-Wincompatible-pointer-types-discards-qualifiers]
-  921 |         updateFingerDynamics(&finger_ptr_list[i]->finger);
+../Core/Src/main.c(929): warning: passing 'volatile Finger *' (aka 'volatile struct Finger *') to parameter of type 'Finger *' (aka 'struct Finger *') discards qualifiers [-Wincompatible-pointer-types-discards-qualifiers]
+  929 |         updateFingerDynamics(&finger_ptr_list[i]->finger);
       |                              ^~~~~~~~~~~~~~~~~~~~~~~~~~~
 ../My_Finger\my_finger.h(169): note: passing argument to parameter 'finger' here
   169 | void updateFingerDynamics(Finger *finger);
       |                                   ^
-../Core/Src/main.c(940): warning: passing 'volatile TrajectoryInterpolator *' (aka 'volatile struct TrajectoryInterpolator *') to parameter of type 'TrajectoryInterpolator *' (aka 'struct TrajectoryInterpolator *') discards qualifiers [-Wincompatible-pointer-types-discards-qualifiers]
-  940 |             jointCmdGeneration(&finger_ptr_list[i]->controller.traj_intp[j], finger_ptr_list[i]->controller.control_period);
+../Core/Src/main.c(948): warning: passing 'volatile TrajectoryInterpolator *' (aka 'volatile struct TrajectoryInterpolator *') to parameter of type 'TrajectoryInterpolator *' (aka 'struct TrajectoryInterpolator *') discards qualifiers [-Wincompatible-pointer-types-discards-qualifiers]
+  948 |             jointCmdGeneration(&finger_ptr_list[i]->controller.traj_intp[j], finger_ptr_list[i]->controller.control_period);
       |                                ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 ../My_TrajGen\my_trajectory_gen.h(40): note: passing argument to parameter 'traj_intp' here
    40 | void jointCmdGeneration(TrajectoryInterpolator *traj_intp, const float delta_t);
       |                                                 ^
-../Core/Src/main.c(949): warning: passing 'volatile Finger *' (aka 'volatile struct Finger *') to parameter of type 'Finger *' (aka 'struct Finger *') discards qualifiers [-Wincompatible-pointer-types-discards-qualifiers]
-  949 |           fingerEndPointFK(&finger_ptr_list[i]->finger, i, finger_ptr_list[i]->controller.p_cmd);
+../Core/Src/main.c(957): warning: passing 'volatile Finger *' (aka 'volatile struct Finger *') to parameter of type 'Finger *' (aka 'struct Finger *') discards qualifiers [-Wincompatible-pointer-types-discards-qualifiers]
+  957 |           fingerEndPointFK(&finger_ptr_list[i]->finger, i, finger_ptr_list[i]->controller.p_cmd);
       |                            ^~~~~~~~~~~~~~~~~~~~~~~~~~~
 ../Core/Src/main.c(254): note: passing argument to parameter 'finger' here
   254 | void fingerEndPointFK(Finger *finger, int finger_idx, float end_point[3]);
       |                               ^
-../Core/Src/main.c(949): warning: passing 'volatile float[3]' to parameter of type 'float *' discards qualifiers [-Wincompatible-pointer-types-discards-qualifiers]
-  949 |           fingerEndPointFK(&finger_ptr_list[i]->finger, i, finger_ptr_list[i]->controller.p_cmd);
+../Core/Src/main.c(957): warning: passing 'volatile float[3]' to parameter of type 'float *' discards qualifiers [-Wincompatible-pointer-types-discards-qualifiers]
+  957 |           fingerEndPointFK(&finger_ptr_list[i]->finger, i, finger_ptr_list[i]->controller.p_cmd);
       |                                                            ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 ../Core/Src/main.c(254): note: passing argument to parameter 'end_point' here
   254 | void fingerEndPointFK(Finger *finger, int finger_idx, float end_point[3]);
       |                                                             ^
-../Core/Src/main.c(950): warning: passing 'volatile Finger *' (aka 'volatile struct Finger *') to parameter of type 'const Finger *' (aka 'const struct Finger *') discards qualifiers [-Wincompatible-pointer-types-discards-qualifiers]
-  950 |           jointAngController_InvDym(&finger_ptr_list[i]->finger, &finger_ptr_list[i]->controller);
+../Core/Src/main.c(958): warning: passing 'volatile Finger *' (aka 'volatile struct Finger *') to parameter of type 'const Finger *' (aka 'const struct Finger *') discards qualifiers [-Wincompatible-pointer-types-discards-qualifiers]
+  958 |           jointAngController_InvDym(&finger_ptr_list[i]->finger, &finger_ptr_list[i]->controller);
       |                                     ^~~~~~~~~~~~~~~~~~~~~~~~~~~
 ../My_Finger\finger_control.h(162): note: passing argument to parameter 'finger' here
   162 | void jointAngController_InvDym(const Finger *finger, FingerController *controller);
       |                                              ^
-../Core/Src/main.c(950): warning: passing 'volatile FingerController *' (aka 'volatile struct FingerController *') to parameter of type 'FingerController *' (aka 'struct FingerController *') discards qualifiers [-Wincompatible-pointer-types-discards-qualifiers]
-  950 |           jointAngController_InvDym(&finger_ptr_list[i]->finger, &finger_ptr_list[i]->controller);
+../Core/Src/main.c(958): warning: passing 'volatile FingerController *' (aka 'volatile struct FingerController *') to parameter of type 'FingerController *' (aka 'struct FingerController *') discards qualifiers [-Wincompatible-pointer-types-discards-qualifiers]
+  958 |           jointAngController_InvDym(&finger_ptr_list[i]->finger, &finger_ptr_list[i]->controller);
       |                                                                  ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 ../My_Finger\finger_control.h(162): note: passing argument to parameter 'controller' here
   162 | void jointAngController_InvDym(const Finger *finger, FingerController *controller);
       |                                                                        ^
-../Core/Src/main.c(954): warning: passing 'volatile Finger *' (aka 'volatile struct Finger *') to parameter of type 'const Finger *' (aka 'const struct Finger *') discards qualifiers [-Wincompatible-pointer-types-discards-qualifiers]
-  954 |           computeProjF_4x3_FR(&finger_ptr_list[i]->finger, &finger_ptr_list[i]->controller);
+../Core/Src/main.c(962): warning: passing 'volatile Finger *' (aka 'volatile struct Finger *') to parameter of type 'const Finger *' (aka 'const struct Finger *') discards qualifiers [-Wincompatible-pointer-types-discards-qualifiers]
+  962 |           computeProjF_4x3_FR(&finger_ptr_list[i]->finger, &finger_ptr_list[i]->controller);
       |                               ^~~~~~~~~~~~~~~~~~~~~~~~~~~
 ../My_Finger\finger_control.h(156): note: passing argument to parameter 'finger' here
   156 | void computeProjF_4x3_FR(const Finger *finger, FingerController *controller);
       |                                        ^
-../Core/Src/main.c(954): warning: passing 'volatile FingerController *' (aka 'volatile struct FingerController *') to parameter of type 'FingerController *' (aka 'struct FingerController *') discards qualifiers [-Wincompatible-pointer-types-discards-qualifiers]
-  954 |           computeProjF_4x3_FR(&finger_ptr_list[i]->finger, &finger_ptr_list[i]->controller);
+../Core/Src/main.c(962): warning: passing 'volatile FingerController *' (aka 'volatile struct FingerController *') to parameter of type 'FingerController *' (aka 'struct FingerController *') discards qualifiers [-Wincompatible-pointer-types-discards-qualifiers]
+  962 |           computeProjF_4x3_FR(&finger_ptr_list[i]->finger, &finger_ptr_list[i]->controller);
       |                                                            ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 ../My_Finger\finger_control.h(156): note: passing argument to parameter 'controller' here
   156 | void computeProjF_4x3_FR(const Finger *finger, FingerController *controller);
       |                                                                  ^
-../Core/Src/main.c(955): warning: passing 'volatile Finger *' (aka 'volatile struct Finger *') to parameter of type 'const Finger *' (aka 'const struct Finger *') discards qualifiers [-Wincompatible-pointer-types-discards-qualifiers]
-  955 |           fingerForceCtrl_Open(&finger_ptr_list[i]->finger, &finger_ptr_list[i]->controller);
+../Core/Src/main.c(963): warning: passing 'volatile Finger *' (aka 'volatile struct Finger *') to parameter of type 'const Finger *' (aka 'const struct Finger *') discards qualifiers [-Wincompatible-pointer-types-discards-qualifiers]
+  963 |           fingerForceCtrl_Open(&finger_ptr_list[i]->finger, &finger_ptr_list[i]->controller);
       |                                ^~~~~~~~~~~~~~~~~~~~~~~~~~~
 ../My_Finger\finger_control.h(158): note: passing argument to parameter 'finger' here
   158 | void fingerForceCtrl_Open(const Finger *finger, FingerController *controller);
       |                                         ^
-../Core/Src/main.c(955): warning: passing 'volatile FingerController *' (aka 'volatile struct FingerController *') to parameter of type 'FingerController *' (aka 'struct FingerController *') discards qualifiers [-Wincompatible-pointer-types-discards-qualifiers]
-  955 |           fingerForceCtrl_Open(&finger_ptr_list[i]->finger, &finger_ptr_list[i]->controller);
+../Core/Src/main.c(963): warning: passing 'volatile FingerController *' (aka 'volatile struct FingerController *') to parameter of type 'FingerController *' (aka 'struct FingerController *') discards qualifiers [-Wincompatible-pointer-types-discards-qualifiers]
+  963 |           fingerForceCtrl_Open(&finger_ptr_list[i]->finger, &finger_ptr_list[i]->controller);
       |                                                             ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 ../My_Finger\finger_control.h(158): note: passing argument to parameter 'controller' here
   158 | void fingerForceCtrl_Open(const Finger *finger, FingerController *controller);
       |                                                                   ^
-../Core/Src/main.c(984): warning: passing 'volatile Finger *' (aka 'volatile struct Finger *') to parameter of type 'const Finger *' (aka 'const struct Finger *') discards qualifiers [-Wincompatible-pointer-types-discards-qualifiers]
-  984 |         computeGoalCurrent(&finger_ptr_list[i]->finger, &finger_ptr_list[i]->controller);
+../Core/Src/main.c(992): warning: passing 'volatile Finger *' (aka 'volatile struct Finger *') to parameter of type 'const Finger *' (aka 'const struct Finger *') discards qualifiers [-Wincompatible-pointer-types-discards-qualifiers]
+  992 |         computeGoalCurrent(&finger_ptr_list[i]->finger, &finger_ptr_list[i]->controller);
       |                            ^~~~~~~~~~~~~~~~~~~~~~~~~~~
 ../Core/Src/main.c(255): note: passing argument to parameter 'finger' here
   255 | void computeGoalCurrent(const Finger *finger, FingerController *controller);
       |                                       ^
-../Core/Src/main.c(984): warning: passing 'volatile FingerController *' (aka 'volatile struct FingerController *') to parameter of type 'FingerController *' (aka 'struct FingerController *') discards qualifiers [-Wincompatible-pointer-types-discards-qualifiers]
-  984 |         computeGoalCurrent(&finger_ptr_list[i]->finger, &finger_ptr_list[i]->controller);
+../Core/Src/main.c(992): warning: passing 'volatile FingerController *' (aka 'volatile struct FingerController *') to parameter of type 'FingerController *' (aka 'struct FingerController *') discards qualifiers [-Wincompatible-pointer-types-discards-qualifiers]
+  992 |         computeGoalCurrent(&finger_ptr_list[i]->finger, &finger_ptr_list[i]->controller);
       |                                                         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 ../Core/Src/main.c(255): note: passing argument to parameter 'controller' here
   255 | void computeGoalCurrent(const Finger *finger, FingerController *controller);
       |                                                                 ^
-../Core/Src/main.c(1302): warning: non-void function does not return a value in all control paths [-Wreturn-type]
- 1302 | }
+../Core/Src/main.c(1310): warning: non-void function does not return a value in all control paths [-Wreturn-type]
+ 1310 | }
       | ^
-../Core/Src/main.c(1335): warning: passing 'volatile TrajectoryInterpolator *' (aka 'volatile struct TrajectoryInterpolator *') to parameter of type 'TrajectoryInterpolator *' (aka 'struct TrajectoryInterpolator *') discards qualifiers [-Wincompatible-pointer-types-discards-qualifiers]
- 1335 |             if (!firstSectionUpdate(&finger_ptr_list[i]->controller.traj_intp[j], &current_point))
+../Core/Src/main.c(1349): warning: passing 'volatile TrajectoryInterpolator *' (aka 'volatile struct TrajectoryInterpolator *') to parameter of type 'TrajectoryInterpolator *' (aka 'struct TrajectoryInterpolator *') discards qualifiers [-Wincompatible-pointer-types-discards-qualifiers]
+ 1349 |             if (!firstSectionUpdate(&finger_ptr_list[i]->controller.traj_intp[j], &current_point))
       |                                     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 ../My_TrajGen\my_trajectory_gen.h(38): note: passing argument to parameter 'traj_intp' here
    38 | bool firstSectionUpdate(TrajectoryInterpolator *traj_intp, const TrajectoryPoint *current_point);
       |                                                 ^
-../Core/Src/main.c(1392): warning: passing 'volatile TrajectoryQueue *' (aka 'volatile struct TrajectoryQueue *') to parameter of type 'TrajectoryQueue *' (aka 'struct TrajectoryQueue *') discards qualifiers [-Wincompatible-pointer-types-discards-qualifiers]
- 1392 |       if (!TrajectoryQueue_Push(&finger_ptr_list[finger_ID]->controller.traj_intp[joint_ID].queue, &cmd_point))
+../Core/Src/main.c(1406): warning: passing 'volatile TrajectoryQueue *' (aka 'volatile struct TrajectoryQueue *') to parameter of type 'TrajectoryQueue *' (aka 'struct TrajectoryQueue *') discards qualifiers [-Wincompatible-pointer-types-discards-qualifiers]
+ 1406 |       if (!TrajectoryQueue_Push(&finger_ptr_list[finger_ID]->controller.traj_intp[joint_ID].queue, &cmd_point))
       |                                 ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 ../My_TrajGen\my_trajectory_gen.h(55): note: passing argument to parameter 'traj_queue' here
    55 | bool TrajectoryQueue_Push(TrajectoryQueue *traj_queue, const TrajectoryPoint *traj_point);
       |                                            ^
-../Core/Src/main.c(1427): warning: passing 'volatile TrajectoryInterpolator *' (aka 'volatile struct TrajectoryInterpolator *') to parameter of type 'TrajectoryInterpolator *' (aka 'struct TrajectoryInterpolator *') discards qualifiers [-Wincompatible-pointer-types-discards-qualifiers]
- 1427 |           if (!firstSectionUpdate(&finger_ptr_list[i]->controller.traj_intp[j], &current_point))
+../Core/Src/main.c(1441): warning: passing 'volatile TrajectoryInterpolator *' (aka 'volatile struct TrajectoryInterpolator *') to parameter of type 'TrajectoryInterpolator *' (aka 'struct TrajectoryInterpolator *') discards qualifiers [-Wincompatible-pointer-types-discards-qualifiers]
+ 1441 |           if (!firstSectionUpdate(&finger_ptr_list[i]->controller.traj_intp[j], &current_point))
       |                                   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 ../My_TrajGen\my_trajectory_gen.h(38): note: passing argument to parameter 'traj_intp' here
    38 | bool firstSectionUpdate(TrajectoryInterpolator *traj_intp, const TrajectoryPoint *current_point);
       |                                                 ^
-../Core/Src/main.c(1495): warning: passing 'volatile Transformation *' (aka 'volatile struct Transformation *') to parameter of type 'Transformation *' (aka 'struct Transformation *') discards qualifiers [-Wincompatible-pointer-types-discards-qualifiers]
- 1495 |     param2Transform(param, &finger_ptr_list[finger_ID]->finger.sensors.tf_SensC);
+../Core/Src/main.c(1571): warning: passing 'volatile Transformation *' (aka 'volatile struct Transformation *') to parameter of type 'Transformation *' (aka 'struct Transformation *') discards qualifiers [-Wincompatible-pointer-types-discards-qualifiers]
+ 1571 |     param2Transform(param, &finger_ptr_list[finger_ID]->finger.sensors.tf_SensC);
       |                            ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 ../My_Finger\my_finger.h(201): note: passing argument to parameter 'tf' here
   201 | void param2Transform(const float param[6], Transformation *tf);
       |                                                            ^
-../Core/Src/main.c(1745): warning: passing 'volatile Transformation *' (aka 'volatile struct Transformation *') to parameter of type 'const Transformation *' (aka 'const struct Transformation *') discards qualifiers [-Wincompatible-pointer-types-discards-qualifiers]
- 1745 |       transform2Param(&finger_ptr_list[i]->finger.tf_PSens, param);
+../Core/Src/main.c(1821): warning: passing 'volatile Transformation *' (aka 'volatile struct Transformation *') to parameter of type 'const Transformation *' (aka 'const struct Transformation *') discards qualifiers [-Wincompatible-pointer-types-discards-qualifiers]
+ 1821 |       transform2Param(&finger_ptr_list[i]->finger.tf_PSens, param);
       |                       ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 ../My_Finger\my_finger.h(199): note: passing argument to parameter 'tf' here
   199 | void transform2Param(const Transformation *tf, float param[6]);
       |                                            ^
-../Core/Src/main.c(1786): warning: passing 'volatile CAN_Queue *' (aka 'volatile struct CAN_Queue *') to parameter of type 'CAN_Queue *' (aka 'struct CAN_Queue *') discards qualifiers [-Wincompatible-pointer-types-discards-qualifiers]
- 1786 |   if (!CAN_Queue_Push(&can_tx_queue, &response_frame))
+../Core/Src/main.c(1868): warning: passing 'volatile CAN_Queue *' (aka 'volatile struct CAN_Queue *') to parameter of type 'CAN_Queue *' (aka 'struct CAN_Queue *') discards qualifiers [-Wincompatible-pointer-types-discards-qualifiers]
+ 1868 |   if (!CAN_Queue_Push(&can_tx_queue, &response_frame))
       |                       ^~~~~~~~~~~~~
 ../My_CANBus\my_canbus.h(26): note: passing argument to parameter 'can_queue' here
    26 | bool CAN_Queue_Push(CAN_Queue *can_queue, CAN_Frame *can_frame);
       |                                ^
-../Core/Src/main.c(1813): warning: passing 'volatile CAN_Queue *' (aka 'volatile struct CAN_Queue *') to parameter of type 'CAN_Queue *' (aka 'struct CAN_Queue *') discards qualifiers [-Wincompatible-pointer-types-discards-qualifiers]
- 1813 |       if (!CAN_Queue_Push(&can_rx_queue, &frame))
+../Core/Src/main.c(1895): warning: passing 'volatile CAN_Queue *' (aka 'volatile struct CAN_Queue *') to parameter of type 'CAN_Queue *' (aka 'struct CAN_Queue *') discards qualifiers [-Wincompatible-pointer-types-discards-qualifiers]
+ 1895 |       if (!CAN_Queue_Push(&can_rx_queue, &frame))
       |                           ^~~~~~~~~~~~~
 ../My_CANBus\my_canbus.h(26): note: passing argument to parameter 'can_queue' here
    26 | bool CAN_Queue_Push(CAN_Queue *can_queue, CAN_Frame *can_frame);
       |                                ^
-../Core/Src/main.c(1940): warning: passing 'volatile CAN_Queue *' (aka 'volatile struct CAN_Queue *') to parameter of type 'CAN_Queue *' (aka 'struct CAN_Queue *') discards qualifiers [-Wincompatible-pointer-types-discards-qualifiers]
- 1940 |   while (HAL_CAN_GetTxMailboxesFreeLevel(&hcan1) > 0 && !CAN_Queue_IsEmpty(&can_tx_queue))
+../Core/Src/main.c(2022): warning: passing 'volatile CAN_Queue *' (aka 'volatile struct CAN_Queue *') to parameter of type 'CAN_Queue *' (aka 'struct CAN_Queue *') discards qualifiers [-Wincompatible-pointer-types-discards-qualifiers]
+ 2022 |   while (HAL_CAN_GetTxMailboxesFreeLevel(&hcan1) > 0 && !CAN_Queue_IsEmpty(&can_tx_queue))
       |                                                                            ^~~~~~~~~~~~~
 ../My_CANBus\my_canbus.h(28): note: passing argument to parameter 'can_queue' here
    28 | bool CAN_Queue_IsEmpty(CAN_Queue *can_queue);
@@ -225,7 +225,7 @@ C:\Program Files\Keil_v5\ARM\ARMCLANG\Bin\..\include\string.h(321): note: passin
 33 warnings generated.
 compiling main.c...
 linking...
-Program Size: Code=52296 RO-data=1048 RW-data=33680 ZI-data=7992  
+Program Size: Code=52620 RO-data=1048 RW-data=33680 ZI-data=7992  
 FromELF: creating hex file...
 "Hand_driver_v2\Hand_driver_v2.axf" - 0 Error(s), 33 Warning(s).
 
@@ -250,7 +250,7 @@ Package Vendor: Keil
 <h2>Collection of Component Files used:</h2>
 
    * Component: ARM::CMSIS:CORE@5.6.0
-Build Time Elapsed:  00:00:02
+Build Time Elapsed:  00:00:01
 </pre>
 </body>
 </html>

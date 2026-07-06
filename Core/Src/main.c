@@ -255,11 +255,13 @@ void fingerEndPointFK(Finger *finger, int finger_idx, float end_point[3]);
 void computeGoalCurrent(const Finger *finger, FingerController *controller);
 bool getServoFeedback_thumb(void);
 bool getServoFeedback(void);
+void CAN_Parsing_PingReq(CAN_Frame *frame);
 void CAN_Parsing_FgrMode(CAN_Frame *frame);
 void CAN_Parsing_FgrModeTrig(CAN_Frame *frame);
 void CAN_Parsing_JntPosCmd(CAN_Frame *frame);
 void CAN_Parsing_JntPosCmdEnable(CAN_Frame *frame);
-void CAN_Parsing_FgrContInfo(CAN_Frame *frame);
+void CAN_Parsing_FgrContInfoTran(CAN_Frame *frame);
+void CAN_Parsing_FgrContInfoRot(CAN_Frame *frame);
 void CAN_Parsing_FgrForceCmd(CAN_Frame *frame);
 void CAN_Parsing_FgrTorqueCmd(CAN_Frame *frame);
 void CAN_Parsing_FgrWrenchCmdTrig(CAN_Frame *frame);
@@ -732,6 +734,9 @@ int main(void)
       // Parse CAN frame and update variables
       switch (rx_frame.id)
       {
+      case CANID_PING_REQ:
+        CAN_Parsing_PingReq(&rx_frame);
+        break;
       case CANID_FINGER_MODE:
         CAN_Parsing_FgrMode(&rx_frame);
         break;
@@ -744,8 +749,11 @@ int main(void)
       case CANID_JOINT_POS_CMD_ENABLE:
         CAN_Parsing_JntPosCmdEnable(&rx_frame);
         break;
-      case CANID_FINGER_CONT_INFO:
-        CAN_Parsing_FgrContInfo(&rx_frame);
+      case CANID_FINGER_CONT_INFO_TRAN:
+        CAN_Parsing_FgrContInfoTran(&rx_frame);
+        break;
+      case CANID_FINGER_CONT_INFO_ROT:
+        CAN_Parsing_FgrContInfoRot(&rx_frame);
         break;
       case CANID_FINGER_FORCE_CMD:
         CAN_Parsing_FgrForceCmd(&rx_frame);
@@ -867,7 +875,7 @@ int main(void)
     //         temp = (int)roundf(param[j] / CAN_TF_ROT_RESOLUTION);
     //       data[j + 1] = temp > 127 ? 127 : (temp < -128 ? -128 : (uint8_t)temp);
     //     }
-    //     addCANMsgToQueue(CANID_TF_PSENS_RESP, 8, data);
+    //     addCANMsgToQueue(CANID_TF_PSENS_TRAN_RESP, 8, data);
     //     finger_ptr_list[i]->tf_PSens_SR.counter = 0;
     //   }
     // }
@@ -1303,6 +1311,12 @@ bool getServoFeedback(void)
 
 // CAN1 parsing function
 // ---------------------------------------------------------- //
+void CAN_Parsing_PingReq(CAN_Frame *frame)
+{
+  uint8_t data[8] = {};
+  addCANMsgToQueue(CANID_PING_RESP, 8, data);
+}
+
 void CAN_Parsing_FgrMode(CAN_Frame *frame)
 {
   int finger_ID = frame->data[0];
@@ -1454,7 +1468,7 @@ void CAN_Parsing_JntPosCmdEnable(CAN_Frame *frame)
   }
 }
 
-void CAN_Parsing_FgrContInfo(CAN_Frame *frame)
+void CAN_Parsing_FgrContInfoTran(CAN_Frame *frame)
 {
   int finger_ID = frame->data[0];
 
@@ -1485,13 +1499,75 @@ void CAN_Parsing_FgrContInfo(CAN_Frame *frame)
     // finger_ptr_list[finger_ID]->finger.sensors.tf_SensC.param[4] = pitch * CAN_TF_ROT_RESOLUTION; // pitch
     // finger_ptr_list[finger_ID]->finger.sensors.tf_SensC.param[5] = yaw * CAN_TF_ROT_RESOLUTION;   // yaw
 
+    int16_t x = (int16_t)(((uint16_t)frame->data[2]) |
+                          ((uint16_t)frame->data[3] << 8));
+    int16_t y = (int16_t)(((uint16_t)frame->data[4]) |
+                          ((uint16_t)frame->data[5] << 8));
+    int16_t z = (int16_t)(((uint16_t)frame->data[6]) |
+                          ((uint16_t)frame->data[7] << 8));
+
+    // float param[6] = {};
+    // param[0] = ((int8_t)frame->data[2]) * CAN_TF_TRANS_RESOLUTION;
+    // param[1] = ((int8_t)frame->data[3]) * CAN_TF_TRANS_RESOLUTION;
+    // param[2] = ((int8_t)frame->data[4]) * CAN_TF_TRANS_RESOLUTION;
+    // param[3] = ((int8_t)frame->data[5]) * CAN_TF_ROT_RESOLUTION;
+    // param[4] = ((int8_t)frame->data[6]) * CAN_TF_ROT_RESOLUTION;
+    // param[5] = ((int8_t)frame->data[7]) * CAN_TF_ROT_RESOLUTION;
+    // param2Transform(param, &finger_ptr_list[finger_ID]->finger.sensors.tf_SensC);
+
+    finger_ptr_list[finger_ID]->finger.sensors.tf_SensC.p[0] = (float)x * CAN_TF_TRANS_RESOLUTION;
+    finger_ptr_list[finger_ID]->finger.sensors.tf_SensC.p[1] = (float)y * CAN_TF_TRANS_RESOLUTION;
+    finger_ptr_list[finger_ID]->finger.sensors.tf_SensC.p[2] = (float)z * CAN_TF_TRANS_RESOLUTION;
+  }
+  else
+    return;
+}
+
+void CAN_Parsing_FgrContInfoRot(CAN_Frame *frame)
+{
+  int finger_ID = frame->data[0];
+
+  if (finger_ID >= 0 && finger_ID < FINGER_NUM)
+  {
+    // wrench basis part
+    int f_num = 0;
+    for (int i = 5; i >= 0; i--)
+    {
+      bool val = (frame->data[1] >> i) & 1;
+      finger_ptr_list[finger_ID]->finger.sensors.wrench_basis[5 - i] = val;
+      if (val)
+        f_num++;
+    }
+    finger_ptr_list[finger_ID]->finger.sensors.contact_f_num = f_num;
+
+    // tf_SensC part
+    // int8_t x = frame->data[2];
+    // int8_t y = frame->data[3];
+    // int8_t z = frame->data[4];
+    // int8_t roll = frame->data[5];
+    // int8_t pitch = frame->data[6];
+    // int8_t yaw = frame->data[7];
+    // finger_ptr_list[finger_ID]->finger.sensors.tf_SensC.param[0] = x * CAN_TF_TRANS_RESOLUTION;                         // x
+    // finger_ptr_list[finger_ID]->finger.sensors.tf_SensC.param[1] = y * CAN_TF_TRANS_RESOLUTION;   // y
+    // finger_ptr_list[finger_ID]->finger.sensors.tf_SensC.param[2] = z * CAN_TF_TRANS_RESOLUTION;   // z
+    // finger_ptr_list[finger_ID]->finger.sensors.tf_SensC.param[3] = roll * CAN_TF_ROT_RESOLUTION;  // roll
+    // finger_ptr_list[finger_ID]->finger.sensors.tf_SensC.param[4] = pitch * CAN_TF_ROT_RESOLUTION; // pitch
+    // finger_ptr_list[finger_ID]->finger.sensors.tf_SensC.param[5] = yaw * CAN_TF_ROT_RESOLUTION;   // yaw
+
+    int16_t roll = (int16_t)(((uint16_t)frame->data[2]) |
+                             ((uint16_t)frame->data[3] << 8));
+    int16_t pitch = (int16_t)(((uint16_t)frame->data[4]) |
+                              ((uint16_t)frame->data[5] << 8));
+    int16_t yaw = (int16_t)(((uint16_t)frame->data[6]) |
+                            ((uint16_t)frame->data[7] << 8));
+
     float param[6] = {};
-    param[0] = ((int8_t)frame->data[2]) * CAN_TF_TRANS_RESOLUTION;
-    param[1] = ((int8_t)frame->data[3]) * CAN_TF_TRANS_RESOLUTION;
-    param[2] = ((int8_t)frame->data[4]) * CAN_TF_TRANS_RESOLUTION;
-    param[3] = ((int8_t)frame->data[5]) * CAN_TF_ROT_RESOLUTION;
-    param[4] = ((int8_t)frame->data[6]) * CAN_TF_ROT_RESOLUTION;
-    param[5] = ((int8_t)frame->data[7]) * CAN_TF_ROT_RESOLUTION;
+    param[0] = finger_ptr_list[finger_ID]->finger.sensors.tf_SensC.p[0];
+    param[1] = finger_ptr_list[finger_ID]->finger.sensors.tf_SensC.p[1];
+    param[2] = finger_ptr_list[finger_ID]->finger.sensors.tf_SensC.p[2];
+    param[3] = (float)roll * CAN_TF_ROT_RESOLUTION;
+    param[4] = (float)pitch * CAN_TF_ROT_RESOLUTION;
+    param[5] = (float)yaw * CAN_TF_ROT_RESOLUTION;
     param2Transform(param, &finger_ptr_list[finger_ID]->finger.sensors.tf_SensC);
   }
   else
@@ -1745,20 +1821,26 @@ void CAN_AddRespMsg_TfPSensState(void)
       transform2Param(&finger_ptr_list[i]->finger.tf_PSens, param);
       // memcpy(&finger_ptr_list[i]->param, param, sizeof(param));
 
-      uint8_t data[8] = {};
-      int temp;
-      data[0] = i;
+      uint8_t data_tran[8] = {};
+      uint8_t data_rot[8] = {};
+      data_tran[0] = i;
+      data_rot[0] = i;
 
-      for (int j = 0; j < 6; j++)
+      for (int j = 0; j < 3; j++)
       {
-        if (j < 3)
-          temp = (int)roundf(param[j] / CAN_TF_TRANS_RESOLUTION);
-        else
-          temp = (int)roundf(param[j] / CAN_TF_ROT_RESOLUTION);
-        // finger_ptr_list[i]->temp[j] = temp;
-        data[j + 1] = (uint8_t)(int8_t)(temp > 127 ? 127 : (temp < -128 ? -128 : temp));
+        int16_t temp = (int)roundf(param[j] / CAN_TF_TRANS_RESOLUTION);
+        data_tran[2 * j + 1] = (uint8_t)temp & 0x00ff;
+        data_tran[2 * j + 2] = (uint8_t)(temp >> 8) & 0x00ff;
       }
-      addCANMsgToQueue(CANID_TF_PSENS_RESP, 8, data);
+
+      for (int j = 0; j < 3; j++)
+      {
+        int16_t temp = (int)roundf(param[j + 3] / CAN_TF_ROT_RESOLUTION);
+        data_rot[2 * j + 1] = (uint8_t)temp & 0x00ff;
+        data_rot[2 * j + 2] = (uint8_t)(temp >> 8) & 0x00ff;
+      }
+      addCANMsgToQueue(CANID_TF_PSENS_TRAN_RESP, 8, data_tran);
+      addCANMsgToQueue(CANID_TF_PSENS_ROT_RESP, 8, data_rot);
       finger_ptr_list[i]->tf_PSens_SR.counter = 0;
     }
   }

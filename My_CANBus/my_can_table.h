@@ -2,26 +2,30 @@
 #define MY_CAN_TABLE_H
 
 // Define CAN IDs for different messages
+#define CANID_PING_REQ 0
 #define CANID_FINGER_MODE 1
 #define CANID_FINGER_MODE_TRIG 2
 #define CANID_JOINT_POS_CMD 3
 #define CANID_JOINT_POS_CMD_ENABLE 4
-#define CANID_FINGER_CONT_INFO 5
-#define CANID_FINGER_FORCE_CMD 6
-#define CANID_FINGER_TORQUE_CMD 7
-#define CANID_FINGER_WRENCH_CMD_TRIG 8
-#define CANID_GRAV_IN_PALM 9
-#define CANID_SETTING_STALLED_PARAM 10
-#define CANID_SETTING_RESP_FINGER_STATE 11
-#define CANID_SETTING_RESP_JOINT_STATE 12
-#define CANID_SETTING_RESP_TFPSENS 13
-#define CANID_CLEAR_WARNING 14
+#define CANID_FINGER_CONT_INFO_TRAN 5
+#define CANID_FINGER_CONT_INFO_ROT 6
+#define CANID_FINGER_FORCE_CMD 7
+#define CANID_FINGER_TORQUE_CMD 8
+#define CANID_FINGER_WRENCH_CMD_TRIG 9
+#define CANID_GRAV_IN_PALM 10
+#define CANID_SETTING_STALLED_PARAM 11
+#define CANID_SETTING_RESP_FINGER_STATE 12
+#define CANID_SETTING_RESP_JOINT_STATE 13
+#define CANID_SETTING_RESP_TFPSENS 14
+#define CANID_CLEAR_WARNING 15
 
 // #define CANID_RESP_ERROR_CHECK 100
 
-#define CANID_FINGER_STATE_RESP 101
-#define CANID_JOINT_STATE_RESP 102
-#define CANID_TF_PSENS_RESP 103
+#define CANID_PING_RESP 101
+#define CANID_FINGER_STATE_RESP 102
+#define CANID_JOINT_STATE_RESP 103
+#define CANID_TF_PSENS_TRAN_RESP 104
+#define CANID_TF_PSENS_ROT_RESP 105
 
 #define CAN_FORCE_RESOLUTION 0.01f         // in N, the resolution of force command sent from upper level
 #define CAN_TORQUE_RESOLUTION 0.01f        // in N-m, the resolution of torque command sent from upper level
@@ -29,8 +33,8 @@
 #define CAN_POS_RESOLUTION 0.001534f       // in rad, the resolution of position command sent from upper level
 #define CAN_VEL_RESOLUTION 0.024f          // in rad/s, the resolution of velocity command sent from upper level
 #define CAN_TAUM_RESOLUTION 4.0f           // in N-mm
-#define CAN_TF_TRANS_RESOLUTION 2.0f       // in mm, the resolution of translation part of homogeneous transformation matrix sent from upper level
-#define CAN_TF_ROT_RESOLUTION 0.02464f     // in rad (2pi/255), the resolution of rotation part of homogeneous transformation matrix sent from upper level
+#define CAN_TF_TRANS_RESOLUTION 0.05f      // in mm, the resolution of translation part of homogeneous transformation matrix sent from upper level
+#define CAN_TF_ROT_RESOLUTION 0.001f       // in rad, the resolution of rotation part of homogeneous transformation matrix sent from upper level
 #define CAN_GRAV_RESOLUTION 0.001f         // in m/s^2, the resolution of gravity vector sent from upper level
 #define CAN_UNIT_BYTE_RESOLUTION 0.003922f // 1/255
 #define CAN_RESP_FREQ_RESOLUTION 1.0f      // in Hz
