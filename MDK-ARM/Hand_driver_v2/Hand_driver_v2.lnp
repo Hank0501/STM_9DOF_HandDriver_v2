@@ -13,6 +13,7 @@
 "hand_driver_v2\usart.o"
 "hand_driver_v2\stm32f4xx_it.o"
 "hand_driver_v2\stm32f4xx_hal_msp.o"
+"hand_driver_v2\my_force_gen.o"
 "hand_driver_v2\stm32f4xx_hal_can.o"
 "hand_driver_v2\stm32f4xx_hal_rcc.o"
 "hand_driver_v2\stm32f4xx_hal_rcc_ex.o"

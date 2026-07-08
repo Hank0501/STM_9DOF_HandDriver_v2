@@ -389,6 +389,9 @@ int main(void)
     finger_ptr_list[i]->controller.ESO_beta2 = 3.0f * ESO_OMEGA0 * ESO_OMEGA0;
     finger_ptr_list[i]->controller.ESO_beta3 = ESO_OMEGA0 * ESO_OMEGA0 * ESO_OMEGA0;
 
+    finger_ptr_list[i]->controller.force_ramp_rate = 8.0f;
+    finger_ptr_list[i]->controller.torque_ramp_rate = 0.1f;
+
     for (int j = 0; j < finger_ptr_list[i]->finger.joint_num; j++)
     {
       finger_ptr_list[i]->controller.est_z1[j] = finger_ptr_list[i]->finger.cur_q[j];
@@ -959,8 +962,29 @@ int main(void)
         }
         else if (finger_ptr_list[i]->controller.control_mode == FINGER_FORCE_CTRL)
         {
-          computeProjF_4x3_FR(&finger_ptr_list[i]->finger, &finger_ptr_list[i]->controller);
-          fingerForceCtrl_Open(&finger_ptr_list[i]->finger, &finger_ptr_list[i]->controller);
+          FingerController *ctrl = &finger_ptr_list[i]->controller;
+          // ????? f_cmd_org ???
+          ForceRamp_Update(&ctrl->f_ramp_force,
+                           &ctrl->f_cmd_org[0],
+                           ctrl->force_ramp_rate,
+                           ctrl->control_period,
+                           ctrl->contact_f_num_force);
+
+          // ?????? f_cmd_org ???
+          ForceRamp_Update(&ctrl->f_ramp_torque,
+                           &ctrl->f_cmd_org[ctrl->contact_f_num_force],
+                           ctrl->torque_ramp_rate,
+                           ctrl->control_period,
+                           ctrl->contact_f_num_torque);
+
+          float force_cmd[6] = {};
+          for (int j = 0; j < ctrl->contact_f_num_force; j++)
+            force_cmd[j] = ctrl->f_ramp_force.f_cmd[j];
+          for (int j = 0; j < ctrl->contact_f_num_torque; j++)
+            force_cmd[ctrl->contact_f_num_force + j] = ctrl->f_ramp_torque.f_cmd[j];
+
+          computeProjF_4x3_FR(&finger_ptr_list[i]->finger, ctrl, force_cmd);
+          fingerForceCtrl_Open(&finger_ptr_list[i]->finger, ctrl);
         }
         else if (finger_ptr_list[i]->controller.control_mode == FINGER_IDLE)
         {
@@ -1349,9 +1373,10 @@ void CAN_Parsing_FgrModeTrig(CAN_Frame *frame)
             if (!firstSectionUpdate(&finger_ptr_list[i]->controller.traj_intp[j], &current_point))
             {
               // Clear the trajectory queue
-              finger_ptr_list[i]->controller.traj_intp[j].queue.count = 0;
-              finger_ptr_list[i]->controller.traj_intp[j].queue.head = 0;
-              finger_ptr_list[i]->controller.traj_intp[j].queue.tail = 0;
+              // finger_ptr_list[i]->controller.traj_intp[j].queue.count = 0;
+              // finger_ptr_list[i]->controller.traj_intp[j].queue.head = 0;
+              // finger_ptr_list[i]->controller.traj_intp[j].queue.tail = 0;
+              // finger_ptr_list[i]->controller.traj_intp[j].traj_progress = 0.0f;
 
               finger_ptr_list[i]->controller.traj_intp[j].queue_is_enabled = false;
               finger_ptr_list[i]->controller.traj_intp[j].end_point = current_point;
@@ -1374,9 +1399,22 @@ void CAN_Parsing_FgrModeTrig(CAN_Frame *frame)
           finger_ptr_list[i]->controller.traj_intp[j].queue.count = 0;
           finger_ptr_list[i]->controller.traj_intp[j].queue.head = 0;
           finger_ptr_list[i]->controller.traj_intp[j].queue.tail = 0;
-
+          finger_ptr_list[i]->controller.traj_intp[j].traj_progress = 0.0f;
           finger_ptr_list[i]->controller.traj_intp[j].queue_is_enabled = false;
         }
+      }
+
+      if (finger_ptr_list[i]->controller.control_mode == FINGER_FORCE_CTRL &&
+          finger_ptr_list[i]->controller.control_mode_buffer != FINGER_FORCE_CTRL)
+      {
+        // HAL_GPIO_WritePin(GPIOD, GPIO_PIN_11, GPIO_PIN_SET);
+        ForceRamp_Reset(&finger_ptr_list[i]->controller.f_ramp_force, 3);
+        ForceRamp_Reset(&finger_ptr_list[i]->controller.f_ramp_torque, 3);
+        memset(&finger_ptr_list[i]->controller.f_cmd_buffer, 0, sizeof(finger_ptr_list[i]->controller.f_cmd_buffer));
+        memset(&finger_ptr_list[i]->controller.f_cmd_org, 0, sizeof(finger_ptr_list[i]->controller.f_cmd_org));
+        memset(&finger_ptr_list[i]->controller.f_cmd_proj, 0, sizeof(finger_ptr_list[i]->controller.f_cmd_proj));
+        finger_ptr_list[i]->controller.contact_f_num_force = 0;
+        finger_ptr_list[i]->controller.contact_f_num_torque = 0;
       }
 
       finger_ptr_list[i]->controller.control_mode = finger_ptr_list[i]->controller.control_mode_buffer;
@@ -1441,9 +1479,10 @@ void CAN_Parsing_JntPosCmdEnable(CAN_Frame *frame)
           if (!firstSectionUpdate(&finger_ptr_list[i]->controller.traj_intp[j], &current_point))
           {
             // Clear the trajectory queue
-            finger_ptr_list[i]->controller.traj_intp[j].queue.count = 0;
-            finger_ptr_list[i]->controller.traj_intp[j].queue.head = 0;
-            finger_ptr_list[i]->controller.traj_intp[j].queue.tail = 0;
+            // finger_ptr_list[i]->controller.traj_intp[j].queue.count = 0;
+            // finger_ptr_list[i]->controller.traj_intp[j].queue.head = 0;
+            // finger_ptr_list[i]->controller.traj_intp[j].queue.tail = 0;
+            // finger_ptr_list[i]->controller.traj_intp[j].traj_progress = 0.0f;
             finger_ptr_list[i]->controller.warning_code[j] |= WARNING_NO_TRAJ_IN_QUEUE;
           }
         }
@@ -1484,6 +1523,20 @@ void CAN_Parsing_FgrContInfoTran(CAN_Frame *frame)
         f_num++;
     }
     finger_ptr_list[finger_ID]->finger.sensors.contact_f_num = f_num;
+
+    int f_num_force = 0, f_num_torque = 0;
+    for (int i = 0; i < 3; i++)
+    {
+      if (finger_ptr_list[finger_ID]->finger.sensors.wrench_basis[i])
+        f_num_force++;
+    }
+    for (int i = 3; i < 6; i++)
+    {
+      if (finger_ptr_list[finger_ID]->finger.sensors.wrench_basis[i])
+        f_num_torque++;
+    }
+    finger_ptr_list[finger_ID]->controller.contact_f_num_force = f_num_force;
+    finger_ptr_list[finger_ID]->controller.contact_f_num_torque = f_num_torque;
 
     // tf_SensC part
     // int8_t x = frame->data[2];
@@ -1539,6 +1592,20 @@ void CAN_Parsing_FgrContInfoRot(CAN_Frame *frame)
         f_num++;
     }
     finger_ptr_list[finger_ID]->finger.sensors.contact_f_num = f_num;
+
+    int f_num_force = 0, f_num_torque = 0;
+    for (int i = 0; i < 3; i++)
+    {
+      if (finger_ptr_list[finger_ID]->finger.sensors.wrench_basis[i])
+        f_num_force++;
+    }
+    for (int i = 3; i < 6; i++)
+    {
+      if (finger_ptr_list[finger_ID]->finger.sensors.wrench_basis[i])
+        f_num_torque++;
+    }
+    finger_ptr_list[finger_ID]->controller.contact_f_num_force = f_num_force;
+    finger_ptr_list[finger_ID]->controller.contact_f_num_torque = f_num_torque;
 
     // tf_SensC part
     // int8_t x = frame->data[2];

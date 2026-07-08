@@ -10,7 +10,7 @@
 // J_H has dimension of (4 * 3) for each finger
 // Note that this function only suits for the case where contact force num > joint num
 // and hand jacobian is full rank
-void computeProjF_4x3_FR(const Finger *finger, FingerController *controller)
+void computeProjF_4x3_FR(const Finger *finger, FingerController *controller, float *force_input)
 {
     int i, j, k;
     float JTJ[3][3] = {0};
@@ -88,7 +88,8 @@ void computeProjF_4x3_FR(const Finger *finger, FingerController *controller)
     {
         controller->f_cmd_proj[i] = 0.0f;
         for (j = 0; j < finger->sensors.contact_f_num; j++)
-            controller->f_cmd_proj[i] += projMat[i][j] * controller->f_cmd_org[j];
+            // controller->f_cmd_proj[i] += projMat[i][j] * controller->f_cmd_org[j];
+            controller->f_cmd_proj[i] += projMat[i][j] * force_input[j];
     }
 }
 
@@ -100,7 +101,7 @@ void fingerForceCtrl_Open(const Finger *finger, FingerController *controller)
     {
         controller->tau_d[i] = 0.0f;
         for (int j = 0; j < finger->sensors.contact_f_num; j++)
-            controller->tau_d[i] += finger->hand_jacobian[j][i] * controller->f_cmd_proj[j]; //+ 0.5f * finger->tau_grav[i]; // in N-mm
+            controller->tau_d[i] += finger->hand_jacobian[j][i] * controller->f_cmd_proj[j] + 0.2f * finger->tau_grav[i]; // in N-mm
     }
 }
 

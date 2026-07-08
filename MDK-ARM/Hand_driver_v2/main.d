@@ -39,5 +39,6 @@ hand_driver_v2/main.o: ..\Core\Src\main.c ..\Core\Inc\main.h \
   ..\..\..\Lib\XM430_STM_Library\my_dynamixel.h \
   ..\..\..\Lib\XM430_STM_Library\control_table.h \
   ..\My_Finger\my_finger.h ..\My_Finger\finger_control.h \
-  ..\My_TrajGen\my_trajectory_gen.h ..\My_Finger\finger_config_08hand.h \
-  ..\My_CANBus\my_canbus.h ..\My_CANBus\my_can_table.h
+  ..\My_TrajGen\my_trajectory_gen.h ..\My_ForceGen\my_force_gen.h \
+  ..\My_Finger\finger_config_08hand.h ..\My_CANBus\my_canbus.h \
+  ..\My_CANBus\my_can_table.h

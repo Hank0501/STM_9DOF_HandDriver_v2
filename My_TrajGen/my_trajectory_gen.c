@@ -8,6 +8,10 @@ bool firstSectionUpdate(TrajectoryInterpolator *traj_intp, const TrajectoryPoint
     if (!pop_result || first_point.time <= 0.0f)
     {
         // No first trajectory point or invalid first trajectory point
+        traj_intp->queue.count = 0;
+        traj_intp->queue.head = 0;
+        traj_intp->queue.tail = 0;
+        traj_intp->traj_progress = 0.0f;
         return false;
     }
     else

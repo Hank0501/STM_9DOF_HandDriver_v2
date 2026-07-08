@@ -3,20 +3,21 @@
 
 #include "my_finger.h"
 #include "my_trajectory_gen.h"
+#include "my_force_gen.h"
 
 // Different mode for variable: control_mode
 #define FINGER_IDLE 0
 #define FINGER_POS_CTRL 1
 #define FINGER_FORCE_CTRL 2
 
-// Different states for variable: p_cmd_state
-#define POS_CMD_STATUS_UNDEFINED 0
-#define POS_CMD_STATUS_ERROR -1
-#define POS_CMD_STATUS_ACC 1
-#define POS_CMD_STATUS_CRUSE 2
-#define POS_CMD_STATUS_DEC 3
-#define POS_CMD_STATUS_END 4
-#define TRAJ_COMPLETED 5
+// // Different states for variable: p_cmd_state
+// #define POS_CMD_STATUS_UNDEFINED 0
+// #define POS_CMD_STATUS_ERROR -1
+// #define POS_CMD_STATUS_ACC 1
+// #define POS_CMD_STATUS_CRUSE 2
+// #define POS_CMD_STATUS_DEC 3
+// #define POS_CMD_STATUS_END 4
+// #define TRAJ_COMPLETED 5
 
 #define WARNING_TRAJECTORY_QUEUE_FULL 0x01 // 0000 0000 0000 0001
 #define WARNING_NO_TRAJ_IN_QUEUE 0x02      // 0000 0000 0000 0010
@@ -42,11 +43,20 @@ typedef struct FingerController
     // Force controller part
     // ---------------------------------- //
     // contact force vector, 6 dimension at most
-    float cur_force[6]; // current fingertip force
-    float f_cmd_buffer[6];
-    // bool f_cmd_trigger;
-    float f_cmd_org[6];         // original desired force, only the first contact_f_num dimension is valid, in N or N-mm
-    float f_cmd_proj[6];        // desired force vector after projection, only the first contact_f_num dimension is valid, in N or N-mm
+    float cur_force[6];    // current fingertip force
+    float f_cmd_buffer[6]; // desired force buffer, force_cmd received from CAN will save in here first
+    float f_cmd_org[6];    // original desired force, only the first contact_f_num dimension is valid, in N or N-mm
+    float f_cmd_proj[6];   // desired force vector after projection, only the first contact_f_num dimension is valid, in N or N-mm
+
+    ForceVectorRamp f_ramp_force;  // 力通道 (fx,fy,fz) 的 ramp 狀態，dim <= 3
+    ForceVectorRamp f_ramp_torque; // 力矩通道 (Taux,Tauy,Tauz) 的 ramp 狀態，dim <= 3
+    float force_ramp_rate;         // 力的爬升速率, N/s
+    float torque_ramp_rate;        // 力矩的爬升速率, N-mm/s
+
+    int contact_f_num_force;  // f_cmd_org[] 前段有幾個是力通道 (<=3)
+    int contact_f_num_torque; // f_cmd_org[] 後段有幾個是力矩通道 (<=3)
+    // 注意: contact_f_num_force + contact_f_num_torque == sensors.contact_f_num
+
     float err_f[6];             // error of force controller
     float mat_force_proj[6][6]; // force projection matrix
 
@@ -153,7 +163,7 @@ typedef struct FingerController
 */
 // Function prototypes
 // ==================================================================================================================== //
-void computeProjF_4x3_FR(const Finger *finger, FingerController *controller);
+void computeProjF_4x3_FR(const Finger *finger, FingerController *controller, float *force_input);
 
 void fingerForceCtrl_Open(const Finger *finger, FingerController *controller);
 

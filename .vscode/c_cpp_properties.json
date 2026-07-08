@@ -13,7 +13,8 @@
                 "../../Lib/qpOASES_STM_Library/qpOASES/inc",
                 "./My_Finger",
                 "./My_CANBus",
-                "./My_TrajGen"
+                "./My_TrajGen",
+                "./My_ForceGen"
             ],
             "defines": [
                 "_DEBUG",
