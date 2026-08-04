@@ -1,21 +1,21 @@
 /* USER CODE BEGIN Header */
 /**
-  ******************************************************************************
-  * @file    tim.c
-  * @brief   This file provides code for the configuration
-  *          of the TIM instances.
-  ******************************************************************************
-  * @attention
-  *
-  * Copyright (c) 2026 STMicroelectronics.
-  * All rights reserved.
-  *
-  * This software is licensed under terms that can be found in the LICENSE file
-  * in the root directory of this software component.
-  * If no LICENSE file comes with this software, it is provided AS-IS.
-  *
-  ******************************************************************************
-  */
+ ******************************************************************************
+ * @file    tim.c
+ * @brief   This file provides code for the configuration
+ *          of the TIM instances.
+ ******************************************************************************
+ * @attention
+ *
+ * Copyright (c) 2026 STMicroelectronics.
+ * All rights reserved.
+ *
+ * This software is licensed under terms that can be found in the LICENSE file
+ * in the root directory of this software component.
+ * If no LICENSE file comes with this software, it is provided AS-IS.
+ *
+ ******************************************************************************
+ */
 /* USER CODE END Header */
 /* Includes ------------------------------------------------------------------*/
 #include "tim.h"
@@ -42,9 +42,9 @@ void MX_TIM6_Init(void)
 
   /* USER CODE END TIM6_Init 1 */
   htim6.Instance = TIM6;
-  htim6.Init.Prescaler = 84-1;
+  htim6.Init.Prescaler = 84 - 1;
   htim6.Init.CounterMode = TIM_COUNTERMODE_UP;
-  htim6.Init.Period = 2500-1;
+  htim6.Init.Period = 1700 - 1;
   htim6.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
   if (HAL_TIM_Base_Init(&htim6) != HAL_OK)
   {
@@ -59,7 +59,6 @@ void MX_TIM6_Init(void)
   /* USER CODE BEGIN TIM6_Init 2 */
 
   /* USER CODE END TIM6_Init 2 */
-
 }
 /* TIM7 init function */
 void MX_TIM7_Init(void)
@@ -75,9 +74,9 @@ void MX_TIM7_Init(void)
 
   /* USER CODE END TIM7_Init 1 */
   htim7.Instance = TIM7;
-  htim7.Init.Prescaler = 84-1;
+  htim7.Init.Prescaler = 84 - 1;
   htim7.Init.CounterMode = TIM_COUNTERMODE_UP;
-  htim7.Init.Period = 500-1;
+  htim7.Init.Period = 500 - 1;
   htim7.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
   if (HAL_TIM_Base_Init(&htim7) != HAL_OK)
   {
@@ -92,7 +91,6 @@ void MX_TIM7_Init(void)
   /* USER CODE BEGIN TIM7_Init 2 */
 
   /* USER CODE END TIM7_Init 2 */
-
 }
 /* TIM13 init function */
 void MX_TIM13_Init(void)
@@ -106,7 +104,7 @@ void MX_TIM13_Init(void)
 
   /* USER CODE END TIM13_Init 1 */
   htim13.Instance = TIM13;
-  htim13.Init.Prescaler = 8400-1;
+  htim13.Init.Prescaler = 8400 - 1;
   htim13.Init.CounterMode = TIM_COUNTERMODE_UP;
   htim13.Init.Period = 60000;
   htim13.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
@@ -118,96 +116,95 @@ void MX_TIM13_Init(void)
   /* USER CODE BEGIN TIM13_Init 2 */
 
   /* USER CODE END TIM13_Init 2 */
-
 }
 
-void HAL_TIM_Base_MspInit(TIM_HandleTypeDef* tim_baseHandle)
+void HAL_TIM_Base_MspInit(TIM_HandleTypeDef *tim_baseHandle)
 {
 
-  if(tim_baseHandle->Instance==TIM6)
+  if (tim_baseHandle->Instance == TIM6)
   {
-  /* USER CODE BEGIN TIM6_MspInit 0 */
+    /* USER CODE BEGIN TIM6_MspInit 0 */
 
-  /* USER CODE END TIM6_MspInit 0 */
+    /* USER CODE END TIM6_MspInit 0 */
     /* TIM6 clock enable */
     __HAL_RCC_TIM6_CLK_ENABLE();
 
     /* TIM6 interrupt Init */
     HAL_NVIC_SetPriority(TIM6_DAC_IRQn, 0, 0);
     HAL_NVIC_EnableIRQ(TIM6_DAC_IRQn);
-  /* USER CODE BEGIN TIM6_MspInit 1 */
+    /* USER CODE BEGIN TIM6_MspInit 1 */
 
-  /* USER CODE END TIM6_MspInit 1 */
+    /* USER CODE END TIM6_MspInit 1 */
   }
-  else if(tim_baseHandle->Instance==TIM7)
+  else if (tim_baseHandle->Instance == TIM7)
   {
-  /* USER CODE BEGIN TIM7_MspInit 0 */
+    /* USER CODE BEGIN TIM7_MspInit 0 */
 
-  /* USER CODE END TIM7_MspInit 0 */
+    /* USER CODE END TIM7_MspInit 0 */
     /* TIM7 clock enable */
     __HAL_RCC_TIM7_CLK_ENABLE();
 
     /* TIM7 interrupt Init */
     HAL_NVIC_SetPriority(TIM7_IRQn, 0, 0);
     HAL_NVIC_EnableIRQ(TIM7_IRQn);
-  /* USER CODE BEGIN TIM7_MspInit 1 */
+    /* USER CODE BEGIN TIM7_MspInit 1 */
 
-  /* USER CODE END TIM7_MspInit 1 */
+    /* USER CODE END TIM7_MspInit 1 */
   }
-  else if(tim_baseHandle->Instance==TIM13)
+  else if (tim_baseHandle->Instance == TIM13)
   {
-  /* USER CODE BEGIN TIM13_MspInit 0 */
+    /* USER CODE BEGIN TIM13_MspInit 0 */
 
-  /* USER CODE END TIM13_MspInit 0 */
+    /* USER CODE END TIM13_MspInit 0 */
     /* TIM13 clock enable */
     __HAL_RCC_TIM13_CLK_ENABLE();
-  /* USER CODE BEGIN TIM13_MspInit 1 */
+    /* USER CODE BEGIN TIM13_MspInit 1 */
 
-  /* USER CODE END TIM13_MspInit 1 */
+    /* USER CODE END TIM13_MspInit 1 */
   }
 }
 
-void HAL_TIM_Base_MspDeInit(TIM_HandleTypeDef* tim_baseHandle)
+void HAL_TIM_Base_MspDeInit(TIM_HandleTypeDef *tim_baseHandle)
 {
 
-  if(tim_baseHandle->Instance==TIM6)
+  if (tim_baseHandle->Instance == TIM6)
   {
-  /* USER CODE BEGIN TIM6_MspDeInit 0 */
+    /* USER CODE BEGIN TIM6_MspDeInit 0 */
 
-  /* USER CODE END TIM6_MspDeInit 0 */
+    /* USER CODE END TIM6_MspDeInit 0 */
     /* Peripheral clock disable */
     __HAL_RCC_TIM6_CLK_DISABLE();
 
     /* TIM6 interrupt Deinit */
     HAL_NVIC_DisableIRQ(TIM6_DAC_IRQn);
-  /* USER CODE BEGIN TIM6_MspDeInit 1 */
+    /* USER CODE BEGIN TIM6_MspDeInit 1 */
 
-  /* USER CODE END TIM6_MspDeInit 1 */
+    /* USER CODE END TIM6_MspDeInit 1 */
   }
-  else if(tim_baseHandle->Instance==TIM7)
+  else if (tim_baseHandle->Instance == TIM7)
   {
-  /* USER CODE BEGIN TIM7_MspDeInit 0 */
+    /* USER CODE BEGIN TIM7_MspDeInit 0 */
 
-  /* USER CODE END TIM7_MspDeInit 0 */
+    /* USER CODE END TIM7_MspDeInit 0 */
     /* Peripheral clock disable */
     __HAL_RCC_TIM7_CLK_DISABLE();
 
     /* TIM7 interrupt Deinit */
     HAL_NVIC_DisableIRQ(TIM7_IRQn);
-  /* USER CODE BEGIN TIM7_MspDeInit 1 */
+    /* USER CODE BEGIN TIM7_MspDeInit 1 */
 
-  /* USER CODE END TIM7_MspDeInit 1 */
+    /* USER CODE END TIM7_MspDeInit 1 */
   }
-  else if(tim_baseHandle->Instance==TIM13)
+  else if (tim_baseHandle->Instance == TIM13)
   {
-  /* USER CODE BEGIN TIM13_MspDeInit 0 */
+    /* USER CODE BEGIN TIM13_MspDeInit 0 */
 
-  /* USER CODE END TIM13_MspDeInit 0 */
+    /* USER CODE END TIM13_MspDeInit 0 */
     /* Peripheral clock disable */
     __HAL_RCC_TIM13_CLK_DISABLE();
-  /* USER CODE BEGIN TIM13_MspDeInit 1 */
+    /* USER CODE BEGIN TIM13_MspDeInit 1 */
 
-  /* USER CODE END TIM13_MspDeInit 1 */
+    /* USER CODE END TIM13_MspDeInit 1 */
   }
 }
 

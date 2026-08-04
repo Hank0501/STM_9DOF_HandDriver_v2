@@ -91,10 +91,12 @@ typedef struct FingerSystem
 #define SERVO_KT_C2_POS 4.086f  // Positive current offset, in mA
 #define SERVO_KT_C2_NEG -2.035f // Negative current offset, in mA
 
-#define CONTROL_PERIOD 2.5f       // in ms
+#define CONTROL_PERIOD 1.7f       // in ms
 #define STATE_COUNTER_PERIOD 0.5f // in ms
 
 #define ESO_OMEGA0 20.0f
+
+#define VEL_LPF_ALPHA 0.95f
 
 #define ERR_EXCEPTION_BUTTON_PRESSED 0x01 // 0000 0000 0000 0001
 #define ERR_CAN_TX_QUEUE_FULL 0x02        // 0000 0000 0000 0010
@@ -145,6 +147,7 @@ volatile FingerSystem thumb_sys = {
                              {THUMB_LNK3_IXX, THUMB_LNK3_IYY, THUMB_LNK3_IZZ, THUMB_LNK3_IXY, THUMB_LNK3_IYZ, THUMB_LNK3_IXZ},
                              {0, 0, 0, 0, 0, 0},
                              {0, 0, 0, 0, 0, 0}},
+    .finger.vel_filter_alpha = {VEL_LPF_ALPHA, VEL_LPF_ALPHA, VEL_LPF_ALPHA, 0, 0},
 };
 
 volatile FingerSystem index_sys = {
@@ -180,7 +183,9 @@ volatile FingerSystem index_sys = {
                              {INDEX_LNK2_IXX, INDEX_LNK2_IYY, INDEX_LNK2_IZZ, INDEX_LNK2_IXY, INDEX_LNK2_IYZ, INDEX_LNK2_IXZ},
                              {INDEX_LNK3_IXX, INDEX_LNK3_IYY, INDEX_LNK3_IZZ, INDEX_LNK3_IXY, INDEX_LNK3_IYZ, INDEX_LNK3_IXZ},
                              {0, 0, 0, 0, 0, 0},
-                             {0, 0, 0, 0, 0, 0}}};
+                             {0, 0, 0, 0, 0, 0}},
+    .finger.vel_filter_alpha = {VEL_LPF_ALPHA, VEL_LPF_ALPHA, VEL_LPF_ALPHA, 0, 0},
+};
 
 volatile FingerSystem middle_sys = {
     .finger.joint_num = MIDDLE_JOINT_NUM,
@@ -215,7 +220,9 @@ volatile FingerSystem middle_sys = {
                              {MIDDLE_LNK2_IXX, MIDDLE_LNK2_IYY, MIDDLE_LNK2_IZZ, MIDDLE_LNK2_IXY, MIDDLE_LNK2_IYZ, MIDDLE_LNK2_IXZ},
                              {MIDDLE_LNK3_IXX, MIDDLE_LNK3_IYY, MIDDLE_LNK3_IZZ, MIDDLE_LNK3_IXY, MIDDLE_LNK3_IYZ, MIDDLE_LNK3_IXZ},
                              {0, 0, 0, 0, 0, 0},
-                             {0, 0, 0, 0, 0, 0}}};
+                             {0, 0, 0, 0, 0, 0}},
+    .finger.vel_filter_alpha = {VEL_LPF_ALPHA, VEL_LPF_ALPHA, VEL_LPF_ALPHA, 0, 0},
+};
 
 int thumb_idx = 0;
 int index_idx = 1;
@@ -358,6 +365,16 @@ int main(void)
   // ------------------------------------------------------ //
   getServoFeedback(); // Update cur_q, cur_q_dot, cur_current of servo
   // default gravity vector in the palm frame, will be updated from upper level
+
+  for (int i = 0; i < FINGER_NUM; i++)
+  {
+    for (int j = 0; j < finger_ptr_list[i]->finger.joint_num; j++)
+    {
+      finger_ptr_list[i]->finger.cur_q_dot[j] = 0.0f;
+      finger_ptr_list[i]->finger.cur_q_dot_raw[j] = 0.0f;
+      finger_ptr_list[i]->finger.prev_q_dot_raw[j] = 0.0f;
+    }
+  }
   g_palm[0] = 0.0f;
   g_palm[1] = 0.0f;
   g_palm[2] = 0.0f;
@@ -428,10 +445,10 @@ int main(void)
   finger_ptr_list[0]->controller.Ineg_offset[0] = 5.0f;
   finger_ptr_list[0]->controller.Ineg_offset[1] = 10.0f;
   finger_ptr_list[0]->controller.Ineg_offset[2] = 5.0f;
-  finger_ptr_list[0]->controller.bl_current[0] = 70.0f;
+  finger_ptr_list[0]->controller.bl_current[0] = 50.0f;
   finger_ptr_list[0]->controller.bl_current[1] = 70.0f;
   finger_ptr_list[0]->controller.bl_current[2] = 60.0f;
-  finger_ptr_list[0]->controller.bl_cycle[0] = 4;
+  finger_ptr_list[0]->controller.bl_cycle[0] = 2;
   finger_ptr_list[0]->controller.bl_cycle[1] = 4;
   finger_ptr_list[0]->controller.bl_cycle[2] = 3;
   finger_ptr_list[0]->controller.bl_ang[0] = 0.02f;
@@ -466,7 +483,7 @@ int main(void)
   finger_ptr_list[1]->controller.bl_cycle[1] = 4;
   finger_ptr_list[1]->controller.bl_cycle[2] = 2;
   finger_ptr_list[1]->controller.bl_ang[0] = 0.025f;
-  finger_ptr_list[1]->controller.bl_ang[1] = 0.03f;
+  finger_ptr_list[1]->controller.bl_ang[1] = 0.01f;
   finger_ptr_list[1]->controller.bl_ang[2] = 0.01f;
 
   finger_ptr_list[2]->controller.K_d[0] = 1100.0f;  // 1500.0f;
@@ -1208,7 +1225,6 @@ void computeGoalCurrent(const Finger *finger, FingerController *controller)
                            I_coulomb * sign_tau_d +
                            controller->ffd_vel[i] * controller->traj_intp[i].q_dot_cmd +
                            controller->ffd_acc[i] * controller->traj_intp[i].q_dot2_cmd;
-      // controller->goal_current[i] = total_goal_current;
 
       controller->cur_sign[i] = (total_goal_current > 4.0f) ? 1 : ((total_goal_current < -4.0f) ? -1 : 0);
       controller->dir_changed[i] = (controller->cur_sign[i] != 0 &&
@@ -1235,6 +1251,8 @@ void computeGoalCurrent(const Finger *finger, FingerController *controller)
       }
       else
         controller->goal_current[i] = total_goal_current;
+
+      // controller->goal_current[i] = total_goal_current;
     }
     else // if (controller->control_mode == FINGER_FORCE_CTRL)
     {
@@ -1300,37 +1318,83 @@ bool getServoFeedback(void)
     return false;
   }
 
-  // Get joint angular velocity
-  if (syncRead_PresentVelocity(myServoList, TOTAL_SERVO_NUM, cur_vel_list, 5))
-  {
-    for (int i = 0; i < THUMB_JOINT_NUM; i++)
-      thumb_sys.finger.cur_q_dot[i] = cur_vel_list[i] * RPM_2_RADS;
-    for (int i = 0; i < INDEX_JOINT_NUM; i++)
-      index_sys.finger.cur_q_dot[i] = cur_vel_list[THUMB_JOINT_NUM + i] * RPM_2_RADS;
-    for (int i = 0; i < MIDDLE_JOINT_NUM; i++)
-      middle_sys.finger.cur_q_dot[i] = cur_vel_list[THUMB_JOINT_NUM + INDEX_JOINT_NUM + i] * RPM_2_RADS;
-  }
-  else
-  {
-    return false;
-  }
-
-  //  Get servo current of the joint
-  // if (syncRead_PresentCurrent(myServoList, TOTAL_SERVO_NUM, cur_current_list, 5))
+  // // Get joint angular velocity using PresentVelocity of DYNAMIXEL Motor
+  // if (syncRead_PresentVelocity(myServoList, TOTAL_SERVO_NUM, cur_vel_list, 5))
   // {
   //   for (int i = 0; i < THUMB_JOINT_NUM; i++)
-  //     thumb_sys.finger.cur_current[i] = cur_current_list[i];
+  //     thumb_sys.finger.cur_q_dot[i] = cur_vel_list[i] * RPM_2_RADS;
   //   for (int i = 0; i < INDEX_JOINT_NUM; i++)
-  //     index_sys.finger.cur_current[i] = cur_current_list[THUMB_JOINT_NUM + i];
+  //     index_sys.finger.cur_q_dot[i] = cur_vel_list[THUMB_JOINT_NUM + i] * RPM_2_RADS;
   //   for (int i = 0; i < MIDDLE_JOINT_NUM; i++)
-  //     middle_sys.finger.cur_current[i] = cur_current_list[THUMB_JOINT_NUM + INDEX_JOINT_NUM + i];
+  //     middle_sys.finger.cur_q_dot[i] = cur_vel_list[THUMB_JOINT_NUM + INDEX_JOINT_NUM + i] * RPM_2_RADS;
   // }
   // else
   // {
   //   return false;
   // }
 
-  // return true;
+  ///////////////////////////////////////////////
+
+  // Get joint angular velocity (finite difference + Tustin-type low-pass filter)
+  {
+
+    for (int i = 0; i < THUMB_JOINT_NUM; i++)
+    {
+      float period = thumb_sys.controller.control_period;
+      float raw_vel = period != 0.0 ? (thumb_sys.finger.cur_q[i] - thumb_sys.finger.prev_q[i]) / period : 0.0f;
+      float alpha = thumb_sys.finger.vel_filter_alpha[i];
+      thumb_sys.finger.cur_q_dot[i] = alpha * thumb_sys.finger.cur_q_dot[i] +
+                                      (1.0f - alpha) * 0.5f * (raw_vel + thumb_sys.finger.prev_q_dot_raw[i]);
+      thumb_sys.finger.cur_q_dot_raw[i] = raw_vel;
+      thumb_sys.finger.prev_q_dot_raw[i] = raw_vel;
+      thumb_sys.finger.prev_q[i] = thumb_sys.finger.cur_q[i];
+    }
+
+    for (int i = 0; i < INDEX_JOINT_NUM; i++)
+    {
+      float period = index_sys.controller.control_period;
+      float raw_vel = period != 0.0 ? (index_sys.finger.cur_q[i] - index_sys.finger.prev_q[i]) / period : 0.0f;
+      float alpha = index_sys.finger.vel_filter_alpha[i];
+      index_sys.finger.cur_q_dot[i] = alpha * index_sys.finger.cur_q_dot[i] +
+                                      (1.0f - alpha) * 0.5f * (raw_vel + index_sys.finger.prev_q_dot_raw[i]);
+      index_sys.finger.cur_q_dot_raw[i] = raw_vel;
+      index_sys.finger.prev_q_dot_raw[i] = raw_vel;
+      index_sys.finger.prev_q[i] = index_sys.finger.cur_q[i];
+    }
+
+    for (int i = 0; i < MIDDLE_JOINT_NUM; i++)
+    {
+      float period = middle_sys.controller.control_period;
+      float raw_vel = period != 0.0 ? (middle_sys.finger.cur_q[i] - middle_sys.finger.prev_q[i]) / period : 0.0f;
+      float alpha = middle_sys.finger.vel_filter_alpha[i];
+      middle_sys.finger.cur_q_dot[i] = alpha * middle_sys.finger.cur_q_dot[i] +
+                                       (1.0f - alpha) * 0.5f * (raw_vel + middle_sys.finger.prev_q_dot_raw[i]);
+      middle_sys.finger.cur_q_dot_raw[i] = raw_vel;
+      middle_sys.finger.prev_q_dot_raw[i] = raw_vel;
+      middle_sys.finger.prev_q[i] = middle_sys.finger.cur_q[i];
+    }
+  }
+
+  //////////////////
+
+  //  Get servo current of the joint
+  if (syncRead_PresentCurrent(myServoList, TOTAL_SERVO_NUM, cur_current_list, 5))
+  {
+    for (int i = 0; i < THUMB_JOINT_NUM; i++)
+      thumb_sys.finger.cur_current[i] = cur_current_list[i];
+    for (int i = 0; i < INDEX_JOINT_NUM; i++)
+      index_sys.finger.cur_current[i] = cur_current_list[THUMB_JOINT_NUM + i];
+    for (int i = 0; i < MIDDLE_JOINT_NUM; i++)
+      middle_sys.finger.cur_current[i] = cur_current_list[THUMB_JOINT_NUM + INDEX_JOINT_NUM + i];
+  }
+  else
+  {
+    return false;
+  }
+
+  //////////////////////
+
+  return true;
 }
 
 // CAN1 parsing function

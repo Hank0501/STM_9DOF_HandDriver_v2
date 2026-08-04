@@ -115,8 +115,13 @@ typedef struct Finger
     // ------------------------------------------------ //
     // volatile ServoXM4340 servo_list[MAX_JOINT_NUM]; // Joint servos
     float cur_q[MAX_JOINT_NUM];       // Current joint angles, in rad
-    float cur_q_dot[MAX_JOINT_NUM];   // Current joint velocities, in rpm
+    float cur_q_dot[MAX_JOINT_NUM];   // Current joint velocities, in rad/s
     float cur_current[MAX_JOINT_NUM]; // Current joint currents, in mA
+
+    float prev_q[MAX_JOINT_NUM]; // q[n-1],上一拍位置,in rad
+    float cur_q_dot_raw[MAX_JOINT_NUM];
+    float prev_q_dot_raw[MAX_JOINT_NUM];         // x[n-1],上一拍濾波前的原始差分速度,in rad/s
+    const float vel_filter_alpha[MAX_JOINT_NUM]; // 濾波器係數 α,依關節分開設定
 
     // Dynamic terms related to joint angle.
     // ------------------------------------------------ //

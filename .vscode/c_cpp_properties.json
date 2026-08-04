@@ -9,8 +9,8 @@
                 "Drivers/STM32F4xx_HAL_Driver/Inc/Legacy",
                 "Drivers/CMSIS/Device/ST/STM32F4xx/Include",
                 "Drivers/CMSIS/Include",
-                "../../Lib/XM430_STM_Library",
-                "../../Lib/qpOASES_STM_Library/qpOASES/inc",
+                "../Lib/XM430_STM_Library",
+                // "../Lib/qpOASES_STM_Library/qpOASES/inc",
                 "./My_Finger",
                 "./My_CANBus",
                 "./My_TrajGen",
@@ -25,7 +25,9 @@
                 "__USE_SINGLE_PRECISION__"
             ],
             "intelliSenseMode": "gcc-arm",
-            "compilerPath": "c:\\Program Files (x86)\\GNU Arm Embedded Toolchain\\10 2021.10\\bin\\arm-none-eabi-gcc.exe",
+            
+            // "compilerPath": "c:\\Program Files (x86)\\GNU Arm Embedded Toolchain\\10 2021.10\\bin\\arm-none-eabi-gcc.exe", // CSPLAB PC
+            "compilerPath": "C:\\Program Files\\Arm\\GNU Toolchain mingw-w64-x86_64-aarch64-none-elf\\bin\\aarch64-none-elf-gcc.exe", // Lenovo L340
             // "compilerPath": "c:\\Program Files\\Keil_v5\\ARM\\ARMCLANG\\bin\\armclang.exe",
             "cStandard": "c11",
             "cppStandard": "c++17"

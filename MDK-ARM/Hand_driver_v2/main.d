@@ -6,14 +6,8 @@ hand_driver_v2/main.o: ..\Core\Src\main.c ..\Core\Inc\main.h \
   ..\Drivers\CMSIS\Device\ST\STM32F4xx\Include\stm32f4xx.h \
   ..\Drivers\CMSIS\Device\ST\STM32F4xx\Include\stm32f407xx.h \
   ..\Drivers\CMSIS\Include\core_cm4.h \
-  C:\Program\ Files\Keil_v5\ARM\ARMCLANG\include\stdint.h \
-  D:\CSP_LAB\Project_arm\Software\Finger_Control_V2\Hand_driver_v2\Drivers\CMSIS\Include\cmsis_version.h \
-  D:\CSP_LAB\Project_arm\Software\Finger_Control_V2\Hand_driver_v2\Drivers\CMSIS\Include\cmsis_compiler.h \
-  D:\CSP_LAB\Project_arm\Software\Finger_Control_V2\Hand_driver_v2\Drivers\CMSIS\Include\cmsis_armclang.h \
-  D:\CSP_LAB\Project_arm\Software\Finger_Control_V2\Hand_driver_v2\Drivers\CMSIS\Include\mpu_armv7.h \
   ..\Drivers\CMSIS\Device\ST\STM32F4xx\Include\system_stm32f4xx.h \
   ..\Drivers\STM32F4xx_HAL_Driver\Inc\Legacy\stm32_hal_legacy.h \
-  C:\Program\ Files\Keil_v5\ARM\ARMCLANG\include\stddef.h \
   ..\Drivers\STM32F4xx_HAL_Driver\Inc\stm32f4xx_hal_rcc_ex.h \
   ..\Drivers\STM32F4xx_HAL_Driver\Inc\stm32f4xx_hal_gpio.h \
   ..\Drivers\STM32F4xx_HAL_Driver\Inc\stm32f4xx_hal_gpio_ex.h \
@@ -32,13 +26,8 @@ hand_driver_v2/main.o: ..\Core\Src\main.c ..\Core\Inc\main.h \
   ..\Drivers\STM32F4xx_HAL_Driver\Inc\stm32f4xx_hal_uart.h \
   ..\Core\Inc\can.h ..\Core\Inc\dma.h ..\Core\Inc\tim.h \
   ..\Core\Inc\usart.h ..\Core\Inc\gpio.h \
-  C:\Program\ Files\Keil_v5\ARM\ARMCLANG\include\math.h \
-  C:\Program\ Files\Keil_v5\ARM\ARMCLANG\include\stdlib.h \
-  C:\Program\ Files\Keil_v5\ARM\ARMCLANG\include\string.h \
-  C:\Program\ Files\Keil_v5\ARM\ARMCLANG\include\stdbool.h \
-  ..\..\..\Lib\XM430_STM_Library\my_dynamixel.h \
-  ..\..\..\Lib\XM430_STM_Library\control_table.h \
-  ..\My_Finger\my_finger.h ..\My_Finger\finger_control.h \
-  ..\My_TrajGen\my_trajectory_gen.h ..\My_ForceGen\my_force_gen.h \
-  ..\My_Finger\finger_config_08hand.h ..\My_CANBus\my_canbus.h \
-  ..\My_CANBus\my_can_table.h
+  ..\..\Lib\XM430_STM_Library\my_dynamixel.h \
+  ..\..\Lib\XM430_STM_Library\control_table.h ..\My_Finger\my_finger.h \
+  ..\My_Finger\finger_control.h ..\My_TrajGen\my_trajectory_gen.h \
+  ..\My_ForceGen\my_force_gen.h ..\My_Finger\finger_config_08hand.h \
+  ..\My_CANBus\my_canbus.h ..\My_CANBus\my_can_table.h

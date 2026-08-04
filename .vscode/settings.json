@@ -8,7 +8,8 @@
         "string.h": "c",
         "stdbool.h": "c",
         "cmath": "c",
-        "my_finger.h": "c"
+        "my_finger.h": "c",
+        "math.h": "c"
     },
     "editor.defaultFormatter": null
 }
