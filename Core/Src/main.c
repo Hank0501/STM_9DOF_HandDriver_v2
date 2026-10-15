@@ -96,7 +96,7 @@ typedef struct FingerSystem
 
 #define ESO_OMEGA0 20.0f
 
-#define VEL_LPF_ALPHA 0.95f
+#define VEL_LPF_ALPHA 0.85f
 
 #define ERR_EXCEPTION_BUTTON_PRESSED 0x01 // 0000 0000 0000 0001
 #define ERR_CAN_TX_QUEUE_FULL 0x02        // 0000 0000 0000 0010
@@ -483,7 +483,7 @@ int main(void)
   finger_ptr_list[1]->controller.bl_cycle[1] = 4;
   finger_ptr_list[1]->controller.bl_cycle[2] = 2;
   finger_ptr_list[1]->controller.bl_ang[0] = 0.025f;
-  finger_ptr_list[1]->controller.bl_ang[1] = 0.01f;
+  finger_ptr_list[1]->controller.bl_ang[1] = 0.03f;
   finger_ptr_list[1]->controller.bl_ang[2] = 0.01f;
 
   finger_ptr_list[2]->controller.K_d[0] = 1100.0f;  // 1500.0f;
@@ -811,94 +811,6 @@ int main(void)
     CAN_AddRespMsg_FgrState();
     CAN_AddRespMsg_JntState();
     CAN_AddRespMsg_TfPSensState();
-
-    // for (int i = 0; i < FINGER_NUM; i++)
-    // {
-    //   if (finger_ptr_list[i]->finger_SR.resp_switch &&
-    //       STATE_COUNTER_PERIOD * finger_ptr_list[i]->finger_SR.counter >= 1000.0f / finger_ptr_list[i]->finger_SR.freq)
-    //   {
-    //     uint8_t data[8] = {};
-    //     data[0] = i;
-    //     data[1] = finger_ptr_list[i]->controller.control_mode;
-    //     data[2] = 1;
-
-    //     for (int j = 0; j < finger_ptr_list[i]->finger.joint_num; j++)
-    //     {
-    //       if (finger_ptr_list[i]->controller.traj_intp->traj_progress < 0.9999f)
-    //       {
-    //         data[2] = 0;
-    //         break;
-    //       }
-    //     }
-
-    //     float max_stall;
-    //     int temp;
-    //     for (int j = 1; j < finger_ptr_list[i]->finger.joint_num; j++)
-    //     {
-    //       max_stall = fmax(finger_ptr_list[i]->controller.stalled_level[j],
-    //                        finger_ptr_list[i]->controller.stalled_level[j - 1]);
-    //     }
-    //     temp = (int)roundf(max_stall / CAN_UNIT_BYTE_RESOLUTION);
-    //     data[3] = temp > 127 ? 127 : (temp < -128 ? -128 : (uint8_t)temp);
-
-    //     for (int j = 0; j < finger_ptr_list[i]->finger.joint_num; j++)
-    //     {
-    //       if (finger_ptr_list[i]->finger.warning_code[j])
-    //         data[4] |= (1 << j);
-    //     }
-    //     addCANMsgToQueue(CANID_FINGER_STATE_RESP, 8, data);
-    //     finger_ptr_list[i]->finger_SR.counter = 0;
-    //   }
-
-    //   if (finger_ptr_list[i]->joint_SR.resp_switch &&
-    //       STATE_COUNTER_PERIOD * finger_ptr_list[i]->joint_SR.counter >= 1000.0f / finger_ptr_list[i]->joint_SR.freq)
-    //   {
-    //     for (int j = 0; j < finger_ptr_list[i]->finger.joint_num; j++)
-    //     {
-    //       int temp;
-    //       uint8_t data[8] = {};
-    //       data[0] = i;
-    //       data[1] = j;
-
-    //       temp = (int)roundf(finger_ptr_list[i]->controller.traj_intp->traj_progress / CAN_UNIT_BYTE_RESOLUTION);
-    //       data[2] = temp > 127 ? 127 : (temp < -128 ? -128 : (uint8_t)temp);
-
-    //       int16_t pos = roundf(finger_ptr_list[i]->finger.cur_q[j] / CAN_POS_RESOLUTION);
-    //       data[3] = pos & 0xff;
-    //       data[4] = (pos >> 8) & 0xff;
-
-    //       temp = (int)roundf(finger_ptr_list[i]->controller.stalled_level[j] / CAN_UNIT_BYTE_RESOLUTION);
-    //       data[5] = temp > 127 ? 127 : (temp < -128 ? -128 : (uint8_t)temp);
-
-    //       data[6] = finger_ptr_list[i]->finger.warning_code[j] & 0xff;
-    //       data[7] = (finger_ptr_list[i]->finger.warning_code[j] >> 8) & 0xff;
-    //       addCANMsgToQueue(CANID_JOINT_STATE_RESP, 8, data);
-    //     }
-    //     finger_ptr_list[i]->joint_SR.counter = 0;
-    //   }
-
-    //   if (finger_ptr_list[i]->tf_PSens_SR.resp_switch &&
-    //       STATE_COUNTER_PERIOD * finger_ptr_list[i]->tf_PSens_SR.counter >= 1000.0f / finger_ptr_list[i]->tf_PSens_SR.freq)
-    //   {
-    //     float param[6] = {};
-    //     transform2Param(&finger_ptr_list[i]->finger.tf_PSens, param);
-
-    //     uint8_t data[8] = {};
-    //     int temp;
-    //     data[0] = i;
-
-    //     for (int j = 0; j < 6; j++)
-    //     {
-    //       if (j < 3)
-    //         temp = (int)roundf(param[j] / CAN_TF_TRANS_RESOLUTION);
-    //       else
-    //         temp = (int)roundf(param[j] / CAN_TF_ROT_RESOLUTION);
-    //       data[j + 1] = temp > 127 ? 127 : (temp < -128 ? -128 : (uint8_t)temp);
-    //     }
-    //     addCANMsgToQueue(CANID_TF_PSENS_TRAN_RESP, 8, data);
-    //     finger_ptr_list[i]->tf_PSens_SR.counter = 0;
-    //   }
-    // }
 
     while (HAL_CAN_GetTxMailboxesFreeLevel(&hcan1) > 0 && !CAN_Queue_IsEmpty(&can_tx_queue))
     {
@@ -1304,7 +1216,7 @@ bool getServoFeedback_thumb(void)
 bool getServoFeedback(void)
 {
   // Get joint angle
-  if (syncRead_PresentPosition(myServoList, TOTAL_SERVO_NUM, cur_ang_list, 5))
+  if (syncRead_PresentPosition(myServoList, TOTAL_SERVO_NUM, cur_ang_list, 1))
   {
     for (int i = 0; i < THUMB_JOINT_NUM; i++)
       thumb_sys.finger.cur_q[i] = (cur_ang_list[i] - thumb_sys.finger.homing_offset[i]) * DEG_2_RAD;
@@ -1378,7 +1290,7 @@ bool getServoFeedback(void)
   //////////////////
 
   //  Get servo current of the joint
-  if (syncRead_PresentCurrent(myServoList, TOTAL_SERVO_NUM, cur_current_list, 5))
+  if (syncRead_PresentCurrent(myServoList, TOTAL_SERVO_NUM, cur_current_list, 1))
   {
     for (int i = 0; i < THUMB_JOINT_NUM; i++)
       thumb_sys.finger.cur_current[i] = cur_current_list[i];

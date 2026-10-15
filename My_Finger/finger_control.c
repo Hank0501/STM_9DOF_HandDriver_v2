@@ -240,7 +240,7 @@ void jointAngController_InvDym(const Finger *finger, FingerController *controlle
         // controller->tau_d[i] = torque_cmd[i] * 0.001f + finger->tau_grav[i] + 0.0f * 0.001f * controller->u_h[i] + 0.0f * sign;
         // controller->tau_d[i] = finger->tau_grav[i];
 
-        float tau_ctrl = torque_cmd[i] * 0.001f;
+        float tau_ctrl = torque_cmd[i] * 0.001f; // convert to N-mm
         float tau_g = 0.7f * finger->tau_grav[i];
         float abs_tau_ctrl = fabsf(tau_ctrl);
         float abs_tau_g = fabsf(tau_g);

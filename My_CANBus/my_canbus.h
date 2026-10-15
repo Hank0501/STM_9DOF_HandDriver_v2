@@ -17,9 +17,8 @@ typedef struct CAN_Frame
 typedef struct CAN_Queue
 {
     CAN_Frame buffer[CAN_FIFO_SIZE];
-    uint32_t head;
-    uint32_t tail;
-    uint32_t count;
+    volatile uint32_t head; // written by ISR only
+    volatile uint32_t tail; // written by main loop only
 } CAN_Queue;
 
 void CAN_Queue_Init(CAN_Queue *can_queue);

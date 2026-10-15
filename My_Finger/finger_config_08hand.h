@@ -72,17 +72,17 @@
 /*
  */
 // DH parameter
-#define THUMB_DH_D1 0.0f // in mm
-#define THUMB_DH_D2 0.0f // in mm
-#define THUMB_DH_D3 0.0f // in mm
+#define THUMB_DH_D1 1.050705f  // in mm, after calibration, nominal : 0
+#define THUMB_DH_D2 -0.931316f // in mm, after calibration, nominal : 0
+#define THUMB_DH_D3 0.0f       // in mm
 
-#define THUMB_DH_A1 52.0f // in mm
-#define THUMB_DH_A2 80.0f // in mm
-#define THUMB_DH_A3 80.0f // in mm
+#define THUMB_DH_A1 51.957f    // in mm, after calibration, nominal : 52
+#define THUMB_DH_A2 80.831597f // in mm, after calibration, nominal : 80
+#define THUMB_DH_A3 80.0f      // in mm
 
-#define THUMB_DH_ALPHA1 -1.0472f // in rad, -60 deg
-#define THUMB_DH_ALPHA2 0.0f     // in rad
-#define THUMB_DH_ALPHA3 0.0f     // in rad
+#define THUMB_DH_ALPHA1 -1.04635f   // in rad, after calibration, nominal : -60 deg/ -1.0472 rad
+#define THUMB_DH_ALPHA2 0.00736498f // in rad, after calibration, nominal : 0 deg / 0 rad
+#define THUMB_DH_ALPHA3 0.0f        // in rad
 
 #define THUMB_INV_B -10096.0f   // a1^2 - a2^2 - a3^2
 #define THUMB_INV_C 7.8125e-05f // 1/(2*a2*a3)
@@ -118,9 +118,9 @@
  */
 // Offset of joint angle in deg, used to allign the servo angle and the model one
 // ang_model = ang_servo - homing_offset
-#define THUMB_HOMING_OFFSET_TMC 90.0f
-#define THUMB_HOMING_OFFSET_PIP 90.0f
-#define THUMB_HOMING_OFFSET_IP 90.0f
+#define THUMB_HOMING_OFFSET_TMC 90.0f - 1.193693f // in deg, , after calibration, nominal : 90
+#define THUMB_HOMING_OFFSET_PIP 90.0f + 1.191875f // in deg, , after calibration, nominal : 90
+#define THUMB_HOMING_OFFSET_IP 90.0f              // in deg, , after calibration, nominal : 90
 
 /*
  */
